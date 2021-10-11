@@ -5,3 +5,5 @@
 - It is an autonomous and P2P smart contract based enabled.
 - It has it's own DZX token. 
 - User first need to contribute 0.25 ETH to proceed in their platform.
+
+![alt text](https://drive.google.com/file/d/1UJ_eIfFrbGhKKKzwQJiLMnuuStjqlmpU/view?usp=sharing)
