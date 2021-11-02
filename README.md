@@ -209,5 +209,10 @@ contract Campaign{
 
 ## Client App Sequence Diagrams
 
+Create Campaign Sequence Diagram| Contribute to Campaign Sequence Diagram|
+:-----------|:--------------|
+![](https://github.com/AbhinavS99/PlegBloc/blob/main/images/fig1.png)|![](https://github.com/AbhinavS99/PlegBloc/blob/main/images/fig2.png)|
 
-
+Create a New Request Sequence Diagram| Approve Request Sequence Diagram
+:---------| :----------|
+![](https://github.com/AbhinavS99/PlegBloc/blob/main/images/fig3.png)| ![](https://github.com/AbhinavS99/PlegBloc/blob/main/images/fig2.png)|
