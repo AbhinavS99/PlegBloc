@@ -7,7 +7,7 @@ const path = require('path');
 
 const provider = new HDWalletProvider(
   process.env.mnemonic,
-  'https://rinkeby.infura.io/v3/cff505b264bb479b9df907c80ee66f5f'
+  process.env.link
 );
 
 const web3 = new Web3(provider);
