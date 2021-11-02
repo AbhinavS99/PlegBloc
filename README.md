@@ -43,7 +43,7 @@
 
 * However, in case of scammers, they will not spend the money on vendors. It may be shopping for clothes, shoes etc., private account. In Rishabh's case, to the car decor.
 
-* ###### If the backers have control over spending, there is less chance of frauds.
+* If the backers have control over spending, there is less chance of frauds.
 
 * If Rishabh tries to spend money on Car decor, Annie can say no and save her money.
 
