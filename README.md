@@ -215,4 +215,4 @@ Create Campaign Sequence Diagram| Contribute to Campaign Sequence Diagram|
 
 Create a New Request Sequence Diagram| Approve Request Sequence Diagram
 :---------| :----------|
-![](https://github.com/AbhinavS99/PlegBloc/blob/main/images/fig3.png)| ![](https://github.com/AbhinavS99/PlegBloc/blob/main/images/fig2.png)|
+![](https://github.com/AbhinavS99/PlegBloc/blob/main/images/fig3.png)| ![](https://github.com/AbhinavS99/PlegBloc/blob/main/images/fig4.png)|
