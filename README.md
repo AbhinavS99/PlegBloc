@@ -1,4 +1,5 @@
 # PlegBloc
+![](https://img.shields.io/gitter/room/AbhinavS99/PlegBloc)
 
 ---
 
