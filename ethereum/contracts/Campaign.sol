@@ -61,7 +61,7 @@ contract Campaign{
     }
     
     /**
-     * @dev Constrcutor of the campaign
+     * @dev Constructor of the campaign
      * @param min_c minimum contribution to start the campaign
      * @param manager the address of the campaign creator/manager
      */
