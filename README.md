@@ -1,5 +1,5 @@
 # PlegBloc
-![](https://img.shields.io/gitter/room/AbhinavS99/PlegBloc)
+![](https://img.shields.io/gitter/room/AbhinavS99/PlegBloc) ![](https://img.shields.io/github/stars/AbhinavS99/PlegBloc?style=social)
 
 ---
 
