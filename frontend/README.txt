@@ -1,0 +1,1 @@
+Please put your frontend react/next.js files in this folder ONLY.
