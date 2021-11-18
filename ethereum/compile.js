@@ -1,51 +1,59 @@
 const path = require("path");
-const solc = require("solc");
 const fs = require("fs-extra");
+const solc = require("solc");
 
-const build_path = path.resolve(__dirname, "build");
-// fs.removeSync(build_path);
+const builPath = path.resolve(__dirname, "build");
+const contractsFolderPath = path.resolve(__dirname, "contracts");
 
-// const campaign_path = path.resolve(__dirname, "contracts", "Campaign.sol");
-// const source = fs.readFileSync(campaign_path, "utf-8");
-// const file_name = "Campaign.sol";
+const createBuildFolder = () => {
+  fs.emptyDirSync(builPath);
+};
 
-// var input = {
-//   language: "Solidity",
-//   sources: {
-//     "Campaign.sol": {
-//       content: source,
-//     },
-//   },
-//   settings: {
-//     outputSelection: {
-//       "*": {
-//         "*": ["abi", "evm.bytecode"],
-//       },
-//     },
-//   },
-// };
+const buildSources = () => {
+  const sources = {};
+  const contractsFiles = fs.readdirSync(contractsFolderPath);
 
-// // fs.ensureDirSync(build_path);
-// // const output = JSON.parse(solc.compile(JSON.stringify(input))).contracts;
-// // for (let contract in output) {
-// //   console.log(contract);
-// //   for (let contractName in output[contract]) {
-// //     console.log(contractName);
-// //   }
-// // }
+  contractsFiles.forEach((file) => {
+    const contractFullPath = path.resolve(contractsFolderPath, file);
+    sources[file] = {
+      content: fs.readFileSync(contractFullPath, "utf8"),
+    };
+  });
 
-// // if (output.errors) {
-// //   output.errors.forEach((err) => {
-// //     console.log(err.formattedMessage);
-// //   });
-// // } else {
-// //   const contracts = output.contracts[file_name];
-// //   for (let contractName in contracts) {
-// //     const contract = contracts[contractName];
-// //     fs.writeFileSync(
-// //       path.resolve(build_path, `${contractName}.json`),
-// //       JSON.stringify(contract.abi, null, 2),
-// //       "utf8"
-// //     );
-// //   }
-// // }
+  return sources;
+};
+
+const input = {
+  language: "Solidity",
+  sources: buildSources(),
+  settings: {
+    outputSelection: {
+      "*": {
+        "*": ["abi", "evm.bytecode"],
+      },
+    },
+  },
+};
+
+const compileContracts = () => {
+  const compiledContracts = JSON.parse(
+    solc.compile(JSON.stringify(input))
+  ).contracts;
+
+  for (let contract in compiledContracts) {
+    for (let contractName in compiledContracts[contract]) {
+      fs.outputJsonSync(
+        path.resolve(builPath, `${contractName}.json`),
+        compiledContracts[contract][contractName],
+        {
+          spaces: 2,
+        }
+      );
+    }
+  }
+};
+
+(function run() {
+  createBuildFolder();
+  compileContracts();
+})();
