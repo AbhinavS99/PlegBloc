@@ -13,7 +13,7 @@ contract CampaignFactory{
      * @dev Create new campaigns by providing minimum contribution value
      * @param min_c Minimum contribution to be made to start a campaign
      */
-    function create_campaign(uint min_c) public{
+    function createCampaign(uint min_c) public{
         address new_campaign = address(new Campaign(min_c, msg.sender));
         deployed_campaigns.push(new_campaign);
     }
