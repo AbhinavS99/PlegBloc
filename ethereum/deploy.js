@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-const web3 = require("web3");
+const Web3 = require("web3");
 const fs = require("fs-extra");
 const path = require("path");
 
@@ -14,14 +14,14 @@ const deployedAddressPath = path.resolve(__dirname, "../ethereum/address.js");
 
 (async () => {
   const accounts = await web3.eth.getAccounts();
-  console.log(`Attempting to deploy from account: ${accounts[0]}`);
+  console.log(`Attempting to deploy from account: ${accounts[1]}`);
 
   const deployedFactory = await new web3.eth.Contract(compiledFactory.abi)
     .deploy({
       data: "0x" + compiledFactory.evm.bytecode.object,
     })
     .send({
-      from: accounts[0],
+      from: accounts[1],
       gas: "2000000",
     });
 
@@ -32,10 +32,10 @@ const deployedAddressPath = path.resolve(__dirname, "../ethereum/address.js");
   fs.removeSync(deployedAddressPath);
   fs.writeFileSync(
     deployedAddressPath,
-    `module.exports = "${result.options.address}";`
+    `module.exports = "${deployedFactory.options.address}";`
   );
   console.log(
-    "successfully deployed, contract address now accessible in address.js"
+    "Successfully deployed, contract address now accessible in address.js"
   );
   provider.engine.stop();
 })();
