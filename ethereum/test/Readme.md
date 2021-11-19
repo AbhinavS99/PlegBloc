@@ -7,8 +7,9 @@
 5. To check if a manager is allowed to a make payment request.
 6. To check if requests are processed.
 
-### To run the tests
+### To run the tests (uses Mocha)
 
-````cd ethereum
-    npm run test```
-````
+```c++
+  cd ethereum
+  npm run test
+  ```
