@@ -19,7 +19,6 @@ beforeEach(async () => {
   factory = await new web3.eth.Contract(compiledFactory.abi)
     .deploy({
       data: "0x" + compiledFactory.evm.bytecode.object,
-      arguements: [3, 5],
     })
     .send({
       from: accounts[0],
@@ -30,11 +29,18 @@ beforeEach(async () => {
     `Factory Contract deployed at address: ${factory.options.address}`
   );
 
-  await factory.methods.createCampaign("100").send({
-    from: accounts[0],
-    gas: "1000000",
-  });
+  //   await factory.methods.createCampaign("100").send({
+  //     from: accounts[0],
+  //     gas: "1000000",
+  //   });
 
-  [campaignAddress] = await factory.methods.getDeployedCampaigns().call();
-  campaign = await web3.eth.Contract(compiledCampaign.abi, campaignAddress);
+  //   [campaignAddress] = await factory.methods.getDeployedCampaigns().call();
+  //   campaign = await web3.eth.Contract(compiledCampaign.abi, campaignAddress);
+});
+
+describe("Campaigns", () => {
+  it("deploys a factory and a campaign", () => {
+    assert.ok(factory.options.address);
+    // assert.ok(campaign.options.address);
+  });
 });
