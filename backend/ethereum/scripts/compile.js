@@ -2,8 +2,8 @@ const path = require("path");
 const fs = require("fs-extra");
 const solc = require("solc");
 
-const buildPath = path.resolve(__dirname, "build");
-const contractsFolderPath = path.resolve(__dirname, "contracts");
+const buildPath = path.resolve(__dirname, "../", "build");
+const contractsFolderPath = path.resolve(__dirname, "../", "contracts");
 
 const createBuildFolder = () => {
   fs.emptyDirSync(buildPath);

@@ -10,6 +10,5 @@
 ### To run the tests (uses Mocha)
 
 ```c++
-  cd ethereum
   npm run test
-  ```
+```

@@ -1,16 +1,18 @@
-require("dotenv").config();
+require("dotenv").config({
+  path: "../../.env",
+});
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const Web3 = require("web3");
 const fs = require("fs-extra");
 const path = require("path");
 
-const compiledFactory = require("./build/CampaignFactory.json");
+const compiledFactory = require("../build/CampaignFactory.json");
 
 const provider = new HDWalletProvider(process.env.MNEMONIC, process.env.LINK);
 const web3 = new Web3(provider);
 
-const deployedAddressPath = path.resolve(__dirname, "../ethereum/address.js");
+const deployedAddressPath = path.resolve(__dirname, "../scripts/address.js");
 
 (async () => {
   const accounts = await web3.eth.getAccounts();
