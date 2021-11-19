@@ -1,27 +1,34 @@
-const HDWalletProvider = require("@truffle/hdwallet-provider");
-const Web3 = require("web3");
 require("dotenv").config();
-const compiledFactory = require("./build/campaignFactory.json");
+
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+const web3 = require("web3");
 const fs = require("fs-extra");
 const path = require("path");
 
-const provider = new HDWalletProvider(process.env.mnemonic, process.env.link);
+const compiledFactory = require("./build/CampaignFactory.json");
 
+const provider = new HDWalletProvider(process.env.MNEMONIC, process.env.LINK);
 const web3 = new Web3(provider);
 
-const deployedAddressPath = path.resolve(__dirname, "../address.js");
+const deployedAddressPath = path.resolve(__dirname, "../ethereum/address.js");
 
 (async () => {
   const accounts = await web3.eth.getAccounts();
-  console.log("Attempting to deploy from account", accounts[0]);
+  console.log(`Attempting to deploy from account: ${accounts[0]}`);
 
-  const result = await new web3.eth.Contract(
-    JSON.parse(compiledFactory.interface)
-  )
-    .deploy({ data: "0x" + compiledFactory.bytecode })
-    .send({ gas: "1000000", from: accounts[0] });
+  const deployedFactory = await new web3.eth.Contract(compiledFactory.abi)
+    .deploy({
+      data: "0x" + compiledFactory.evm.bytecode.object,
+    })
+    .send({
+      from: accounts[0],
+      gas: "2000000",
+    });
 
-  console.log(result.options.address);
+  console.log(
+    `Campaign Factory deployed at address: ${deployedFactory.options.address}`
+  );
+
   fs.removeSync(deployedAddressPath);
   fs.writeFileSync(
     deployedAddressPath,
@@ -30,4 +37,5 @@ const deployedAddressPath = path.resolve(__dirname, "../address.js");
   console.log(
     "successfully deployed, contract address now accessible in address.js"
   );
+  provider.engine.stop();
 })();
