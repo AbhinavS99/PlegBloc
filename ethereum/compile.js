@@ -2,11 +2,11 @@ const path = require("path");
 const fs = require("fs-extra");
 const solc = require("solc");
 
-const builPath = path.resolve(__dirname, "build");
+const buildPath = path.resolve(__dirname, "build");
 const contractsFolderPath = path.resolve(__dirname, "contracts");
 
 const createBuildFolder = () => {
-  fs.emptyDirSync(builPath);
+  fs.emptyDirSync(buildPath);
 };
 
 const buildSources = () => {
@@ -43,7 +43,7 @@ const compileContracts = () => {
   for (let contract in compiledContracts) {
     for (let contractName in compiledContracts[contract]) {
       fs.outputJsonSync(
-        path.resolve(builPath, `${contractName}.json`),
+        path.resolve(buildPath, `${contractName}.json`),
         compiledContracts[contract][contractName],
         {
           spaces: 2,
