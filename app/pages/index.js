@@ -16,7 +16,7 @@ export default function Home() {
       {/* body of the page */}
 
       <main className={styles.main}>
-        
+        <h1>This is the Home Page of Next.js :)</h1>
       </main>
 
       <footer className={styles.footer}>
