@@ -9,7 +9,10 @@ const path = require("path");
 
 const compiledFactory = require("../build/CampaignFactory.json");
 
-const provider = new HDWalletProvider(process.env.MNEMONIC, process.env.LINK);
+const provider = new HDWalletProvider(
+  process.env.REACT_APP_MNEMONIC,
+  process.env.REACT_APP_LINK
+);
 const web3 = new Web3(provider);
 
 const deployedAddressPath = path.resolve(__dirname, "../scripts/address.js");
