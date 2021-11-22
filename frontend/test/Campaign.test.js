@@ -4,8 +4,8 @@ const Web3 = require("web3");
 
 const web3 = new Web3(ganache.provider());
 
-const compiledFactory = require("../../app/ethereum/build/CampaignFactory.json");
-const compiledCampaign = require("../../app/ethereum/build/Campaign.json");
+const compiledFactory = require("../../frontend/ethereum/build/CampaignFactory.json");
+const compiledCampaign = require("../../frontend/ethereum/build/Campaign.json");
 
 let accounts;
 let factory;
