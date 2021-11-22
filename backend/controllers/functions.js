@@ -55,9 +55,47 @@ async function comparePassword(password, hash) {
 }
 
 
+const genOtp = async (email) => {
+    const userObj = {
+        name: email,
+        time: Date.now(),
+    };
+
+    let encoded = await encrypt(JSON.stringify(userObj));
+    return encoded.content;
+};
+
+const verifyOtp = async (otp, username) => {
+    try {
+        const decipher = crypto.createDecipheriv(
+            algorithm,
+            Securitykey,
+            initVector
+        ); //Buffer.from(encoded.iv, 'hex'));
+        let decrypted = decipher.update(
+            Buffer.from(otp, "hex"),
+            "hex",
+            "utf-8"
+        );
+        decrypted += decipher.final("utf-8");
+        decrypted = JSON.parse(decrypted.toString());
+        if (
+            decrypted.name == username &&
+            Date.now() - decrypted.time <= timeWindow
+        )
+            return true;
+        return false;
+    } catch (e) {
+        return false;
+    }
+};
+
+
 module.exports = {
     sendErrorMessage,
     isLoggedIn,
     hash,
-    comparePassword
+    comparePassword,
+    genOtp,
+    verifyOtp
 }
