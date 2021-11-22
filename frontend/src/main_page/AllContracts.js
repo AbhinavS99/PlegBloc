@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Common from "./Common";
 
 const AllContracts = () => {
   return (
-    <div>
-      <h1></h1>
-    </div>
+    <>
+      <Common title="Active Campaigns" data={[]} />
+    </>
   );
 };
 

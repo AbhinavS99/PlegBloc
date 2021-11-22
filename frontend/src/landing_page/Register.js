@@ -31,7 +31,7 @@ const Register = () => {
       <div className="my-5">
         <h1 className="text-center">Register</h1>
         <section id="header" className="d-flex align-items-center">
-          <div className="container-fluid nav_bg">
+          <div className="container-fluid">
             <div className="row">
               <div className="col-md-6 pt-5 pt-lg-0 order-2 order-lg-1 d-flex justify-content-center flex-column">
                 <div className="container contact_div">

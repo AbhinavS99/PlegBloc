@@ -5,7 +5,7 @@ const Common = (props) => {
   return (
     <div>
       <section id="header" className="d-flex align-items-center">
-        <div className="container-fluid nav_bg">
+        <div className="container-fluid">
           <div className="row">
             <div className="col-10 mx-auto">
               <div className="row">

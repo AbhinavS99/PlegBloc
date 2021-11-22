@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Common from "./Common";
 
 const Contributions = () => {
   return (
     <div>
-      <h1></h1>
+      <Common title="My Contributions" data={[]} />
     </div>
   );
 };
