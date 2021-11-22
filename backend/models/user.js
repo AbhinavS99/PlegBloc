@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    walletID: {
+        type: String,
+        required: true
+    },
     isVerified: {
         type: Boolean,
         default: false,

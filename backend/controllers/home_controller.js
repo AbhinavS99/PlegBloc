@@ -1,5 +1,5 @@
 require("dotenv").config();
-const {sendErrorMessage, isLoggedIn, hash, comparePassword} = require('./functions');
+const {sendErrorMessage, isLoggedIn, hash, comparePassword, genOtp, verifyOtp} = require('./functions');
 const {generateToken} = require('../config/jwt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
@@ -16,14 +16,10 @@ module.exports.signup = async (req, res) => {
     const _username = req.body.username;
     const _email = req.body.email;
     const _password = req.body.password;
-    const _confirmPassword = req.body.confirm_password;
     const _phone = req.body.phone;
+    const _walletID = req.body.wallet_id;
 
-    if (_password != _confirmPassword) {
-        return sendErrorMessage(res, 400, "password and confirm password must be same!");
-    }
-
-    User.findOne({username:_username}, async (err, user) => {
+    User.findOne({email:_email}, async (err, user) => {
         if (err) return sendErrorMessage(res, 403, "Error in finding the user in DB");
 
         if (!user) {
@@ -33,7 +29,8 @@ module.exports.signup = async (req, res) => {
                 'username': _username,
                 'email': _email,
                 'password': hashPassword,
-                'phone': _phone
+                'phone': _phone,
+                'walletID': _walletID
             };
             User.create(userObject, (err, user) => {
                 if (err) return sendErrorMessage(res, 403, "Unable to create a user while signUp!");
@@ -41,19 +38,19 @@ module.exports.signup = async (req, res) => {
                     'isError': false,
                     'user': user
                 });
-            })
+            });
         } else {
-            return sendErrorMessage(res, 400, "This user is already exist!");
+            return sendErrorMessage(res, 400, "This email ID is already exist!");
         }
     });
 }
 
 
 module.exports.signin = async (req, res) => {
-    const _username = req.body.username;
+    const _email = req.body.email;
     const _password = req.body.password;
-
-    User.findOne({username: _username}, async (err, user) => {
+    
+    User.findOne({email: _email}, async (err, user) => {
         if (err) return sendErrorMessage(res, 404, "Error in finding this user from DB");
         
         if (user) {
@@ -61,12 +58,20 @@ module.exports.signin = async (req, res) => {
             if (isSame == false) {
                 return sendErrorMessage(res, 404, "User has entered a wrong password.");
             }
-
+    
             // check if the user is verfied or not?
-            // if (user.isVerified == false) {
-            //     // generate otp and sent this OTP on user's email address.
-            // }
-
+            if (user.isVerified == false) {
+                // generate otp and sent this OTP on user's email address.
+                // generate otp and sent this OTP on user's email address.
+                const actualOtp = await genOtp(user.email);
+                sendEmail(user.username, user.email, actualOtp).catch(console.error);
+                return res.status(200).send({
+                    'isError': false,
+                    'isVerified': false,
+                    'email': user.email
+                });
+            }
+            
             const accessToken = generateToken(_username);
             res.cookie("token", accessToken, {
                     httpOnly: true,
@@ -74,7 +79,7 @@ module.exports.signin = async (req, res) => {
             return res.status(200).send({
                 'isError': false,
                 'isVerified': true,
-                'token': accessToken,
+                // 'token': accessToken,
                 'user': user
             });
         } else {
@@ -84,8 +89,31 @@ module.exports.signin = async (req, res) => {
 }
 
 
+module.exports.verifyOtp = async (req, res) => {
+    const _email = req.body.email;
+    const _userOtp = req.body.userOtp;
+
+    let isOtpCorrect = await verifyOtp(_userOtp, _email);
+    if (!isOtpCorrect) {
+        return sendErrorMessage(res, 404, `User has enetered a wrong Otp. Please repeat this process!`);
+    }
+
+    // set token in the cookies.
+    const accessToken = generateToken(_username);
+    res.cookie("token", accessToken, {
+        httpOnly: true,
+    });
+    User.findOne({email: _email}, (err, user) => {
+        if (err) return sendErrorMessage(res, 404, `User with ${_email} do not exist!`);
+        return res.status(200).send({
+            'isError': false,
+            'user': user
+        }); 
+    });
+};
+
+
 module.exports.createCampaign = async (req, res) => {
-    console.log("token", req.cookies);
     if (isLoggedIn(req) == false) return sendErrorMessage(res, 404, "You need to sign in first.");
 
     const _campaignName = req.body.name;
@@ -96,28 +124,32 @@ module.exports.createCampaign = async (req, res) => {
     Campaign.findOne({name: _campaignName}, async (err, campaign) => {
         if (err) return sendErrorMessage(res, 401, "Error while finding this camapign from DB");
 
-        const username = jwt.verify(req.cookies.token, process.env.ACCESS_TOKEN_SECRET).username;
-        let campaignObject = {
-            'manager': username,
-            'name': _campaignName,
-            'description': _campaignDesc,
-            'minAmount': _campaignMinAmount,
-            'targetAmount': _campaignTargetAmount
-        };
-        Campaign.create(campaignObject, async (err, campaign) => {
-            if (err) return sendErrorMessage(res, 400, "Error while creating a campaign.");
-            // find the user from the DB and put this campaign into this user campaign list too.
-            User.findOne({username:username}, async (err, user) => {
-                if (err) return sendErrorMessage(res, 400, "Error in finding the user from the DB.");
+        if (!campaign) {
+            const username = jwt.verify(req.cookies.token, process.env.ACCESS_TOKEN_SECRET).username;
+            let campaignObject = {
+                'manager': username,
+                'name': _campaignName,
+                'description': _campaignDesc,
+                'minAmount': _campaignMinAmount,
+                'targetAmount': _campaignTargetAmount
+            };
+            Campaign.create(campaignObject, async (err, campaign) => {
+                if (err) return sendErrorMessage(res, 400, "Error while creating a campaign.");
+                // find the user from the DB and put this campaign into this user campaign list too.
+                User.findOne({username: username}, async (err, user) => {
+                    if (err) return sendErrorMessage(res, 400, "Error in finding the user from the DB.");
 
-                await user.myCreatedCampaigns.push(campaign);
-                await user.save();
+                    await user.myCreatedCampaigns.push(campaign);
+                    await user.save();
 
-                return res.status(400).send({
-                    'isError': false,
-                    'user': user
+                    return res.status(200).send({
+                        'isError': false,
+                        'user': user
+                    });
                 });
             });
-        });
-    })
+        } else {
+            return sendErrorMessage(res, 400, "This campaign already exist!");
+        }
+    });
 }
