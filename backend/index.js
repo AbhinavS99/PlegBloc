@@ -8,6 +8,7 @@ const fs = require("fs");
 const path = require("path");
 const db = require("./config/mongoose");
 const env = require("dotenv");
+const cors = require("cors");
 env.config();
 // const bodyParser = require("body-parser");
 // const https = require("https");
@@ -16,6 +17,7 @@ env.config();
 
 // app.use(bodyParser());
 // app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(express.urlencoded({
     extended: true
 }));
@@ -24,19 +26,33 @@ app.use(express.urlencoded({
 // app.set("view engine", "ejs");
 // app.set("views", "./views");
 
-app.use(session({
-    secret: require("crypto").randomBytes(20).toString("hex"),
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        secure: false // set it true while production
-    },
-}));
+// app.use(session({
+//     secret: require("crypto").randomBytes(20).toString("hex"),
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: {
+//         secure: false // set it true while production
+//     },
+// }));
 
-app.use(cookieParser());
+
 app.use(express.static("./assets"));
 app.use(express.json());
 app.use(expressLayouts);
+
+
+
+const corsConfig = {
+    origin: true,
+    credentials: true,
+  };
+  
+app.use(cors(corsConfig));
+app.options('*', cors(corsConfig));
+// app.use(cors({
+//     origin: [`http://localhost:3000`, `https://localhost:8000`],
+//     credentials: 'true'
+// }));
 
 // extract style and scripts from sub pages into the layout
 app.set("layout extractStyles", true);

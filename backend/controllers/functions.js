@@ -2,7 +2,11 @@ require('dotenv').config();
 const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const crypto = require("crypto");
+const algorithm = "aes-256-cbc";
+const initVector = Buffer.from(process.env.initVector, "hex"); // crypto.randomBytes(16);
+const Securitykey = Buffer.from(process.env.security_key, "hex"); //crypto.randomBytes(32);
+const timeWindow = 60000 + 60000; // 1+1 minute
 
 // To show an error message on the UI.
 function sendErrorMessage(res, statusCode, message) {
@@ -12,6 +16,30 @@ function sendErrorMessage(res, statusCode, message) {
         'message': message
     });
 };
+
+
+async function sendEmail(username, email, otp) {
+    var transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "noreply.somag@gmail.com",
+            pass: "FCSsomag@101",
+        },
+    });
+    var mailOptions = {
+        from: "noreply.somag@gmail.com",
+        to: email,
+        subject: "Verify your Email address with PlegBloc",
+        html: `<p>Hi ${username}!<br><br>Thank you for choosing PlegBloc. Use the following OTP to verify yourself. OTP is valid for next 2 minutes only.<br><br>${otp}<br><br>Regards!<br>PlegBloc</p>`,
+    };
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log("Email sent: " + info.response);
+        }
+    });
+}
 
 
 // To check if user is logged in or not.
@@ -65,7 +93,8 @@ const genOtp = async (email) => {
     return encoded.content;
 };
 
-const verifyOtp = async (otp, username) => {
+
+const verifyOtp = async (otp, email) => {
     try {
         const decipher = crypto.createDecipheriv(
             algorithm,
@@ -80,7 +109,7 @@ const verifyOtp = async (otp, username) => {
         decrypted += decipher.final("utf-8");
         decrypted = JSON.parse(decrypted.toString());
         if (
-            decrypted.name == username &&
+            decrypted.name == email &&
             Date.now() - decrypted.time <= timeWindow
         )
             return true;
@@ -91,11 +120,40 @@ const verifyOtp = async (otp, username) => {
 };
 
 
+const encrypt = async (message) => {
+    const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
+    let encrypted = cipher.update(message, "utf-8", "hex");
+    encrypted += cipher.final("hex");
+
+    return {
+        iv: initVector.toString("hex"),
+        content: encrypted.toString("hex"),
+    };
+};
+
+
+const decrypt = async (encoded) => {
+    const decipher = crypto.createDecipheriv(
+        algorithm,
+        Securitykey,
+        initVector
+    );
+    let decrypted = decipher.update(
+        Buffer.from(encoded.content, "hex"),
+        "hex",
+        "utf-8"
+    );
+    decrypted += decipher.final("utf-8");
+    return decrypted.toString();
+};
+
+
 module.exports = {
     sendErrorMessage,
     isLoggedIn,
     hash,
     comparePassword,
     genOtp,
-    verifyOtp
+    verifyOtp,
+    sendEmail
 }

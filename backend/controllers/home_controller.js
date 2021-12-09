@@ -1,5 +1,5 @@
 require("dotenv").config();
-const {sendErrorMessage, isLoggedIn, hash, comparePassword, genOtp, verifyOtp} = require('./functions');
+const {sendErrorMessage, isLoggedIn, hash, comparePassword, genOtp, verifyOtp, sendEmail} = require('./functions');
 const {generateToken} = require('../config/jwt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
@@ -12,6 +12,8 @@ module.exports.home = (req, res) => {
 
 
 module.exports.signup = async (req, res) => {
+    console.log("Request aayi mere paas!!");
+
     const _name = req.body.name;
     const _username = req.body.username;
     const _email = req.body.email;
@@ -33,38 +35,39 @@ module.exports.signup = async (req, res) => {
                 'walletID': _walletID
             };
             User.create(userObject, (err, user) => {
-                if (err) return sendErrorMessage(res, 403, "Unable to create a user while signUp!");
+                if (err) return sendErrorMessage(res, 200, "Unable to create a user while signUp!");
                 return res.status(200).send({
                     'isError': false,
                     'user': user
                 });
             });
         } else {
-            return sendErrorMessage(res, 400, "This email ID is already exist!");
+            return sendErrorMessage(res, 200, "This email ID is already exist!");
         }
     });
 }
 
 
 module.exports.signin = async (req, res) => {
+    // const data = JSON.parse(Object.keys(req.body)[0]);
     const _email = req.body.email;
     const _password = req.body.password;
+    console.log('=>', req.body);
     
     User.findOne({email: _email}, async (err, user) => {
-        if (err) return sendErrorMessage(res, 404, "Error in finding this user from DB");
-        
+        if (err) return sendErrorMessage(res, 200, "Error in finding this user from DB");
+        console.log('=>', user);
         if (user) {
             const isSame = await comparePassword(_password, user.password);
             if (isSame == false) {
-                return sendErrorMessage(res, 404, "User has entered a wrong password.");
+                return sendErrorMessage(res, 200, "User has entered a wrong password.");
             }
     
             // check if the user is verfied or not?
             if (user.isVerified == false) {
                 // generate otp and sent this OTP on user's email address.
-                // generate otp and sent this OTP on user's email address.
                 const actualOtp = await genOtp(user.email);
-                sendEmail(user.username, user.email, actualOtp).catch(console.error);
+                await sendEmail(user.username, user.email, actualOtp).catch(console.error);
                 return res.status(200).send({
                     'isError': false,
                     'isVerified': false,
@@ -72,18 +75,18 @@ module.exports.signin = async (req, res) => {
                 });
             }
             
-            const accessToken = generateToken(_username);
+            const accessToken = generateToken(_email);
             res.cookie("token", accessToken, {
                     httpOnly: true,
             });
-            return res.status(200).send({
+            return res.status(200).json({
                 'isError': false,
                 'isVerified': true,
                 // 'token': accessToken,
                 'user': user
             });
         } else {
-            return sendErrorMessage(res, 404, "This user do not exist!");
+            return sendErrorMessage(res, 200, "This user do not exist!");
         }
     })
 }
@@ -99,12 +102,14 @@ module.exports.verifyOtp = async (req, res) => {
     }
 
     // set token in the cookies.
-    const accessToken = generateToken(_username);
+    const accessToken = generateToken(_email);
     res.cookie("token", accessToken, {
         httpOnly: true,
     });
-    User.findOne({email: _email}, (err, user) => {
+    User.findOne({email: _email}, async (err, user) => {
         if (err) return sendErrorMessage(res, 404, `User with ${_email} do not exist!`);
+        user.isVerified = true;
+        await user.save();
         return res.status(200).send({
             'isError': false,
             'user': user
