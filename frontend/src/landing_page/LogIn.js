@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import {isAuthenticated} from "./../auth/helper";
+import {signin} from "./../apis/core";
 
 const LogIn = () => {
   const [data, setData] = useState({
@@ -16,10 +18,19 @@ const LogIn = () => {
     });
   };
 
-  const formSubmit = (e) => {
+  const formSubmit = async (e) => {
     e.preventDefault();
-    alert(`My email is ${data.email}, password is ${data.password}`);
+    const response = await signin(data.email, data.password);
+    /*
+    if isError == false and isVerified == true:
+        go to the home page, where user can create campaigns.
+    if isError == false and isVerified == false:
+        go to the enter OTP page (make sure to hold email ID with you).
+    if isError == true:
+        show the error on the UI.
+    */
   };
+
   return (
     <>
       <div className="my-5">

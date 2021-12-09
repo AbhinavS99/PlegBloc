@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import web from "../../src/images/register.svg";
+import {signup} from "./../apis/core";
+
 const Register = () => {
   const [data, setData] = useState({
     name: "",
@@ -21,9 +23,18 @@ const Register = () => {
     });
   };
 
-  const formSubmit = (e) => {
+  const formSubmit = async (e) => {
     e.preventDefault();
-    alert(`My email is ${data.email}, password is ${data.password}`);
+    if (data.password != data.confirm_password) {
+      alert("Password and Confirm Password must be same!");
+    }
+    const response = await signup(data.name, data.username, data.email, data.phone, data.wallet_id, data.password);
+    /*
+    if isError == true:
+        show the error on the UI.
+    if isError == false:
+        account created succesfully, show this alert and redirect the user to the login page.
+    */
   };
 
   return (
