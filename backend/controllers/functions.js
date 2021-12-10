@@ -19,31 +19,6 @@ function sendErrorMessage(res, statusCode, message) {
 };
 
 
-// Send the OTP on user's email ID.
-async function sendEmail(username, email, otp) {
-    var transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: "noreply.somag@gmail.com",
-            pass: "FCSsomag@101",
-        },
-    });
-    var mailOptions = {
-        from: "noreply.somag@gmail.com",
-        to: email,
-        subject: "Verify your Email address with PlegBloc",
-        html: `<p>Hi ${username}!<br><br>Thank you for choosing PlegBloc. Use the following OTP to verify yourself. OTP is valid for next 2 minutes only.<br><br>${otp}<br><br>Regards!<br>PlegBloc</p>`,
-    };
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log("Email sent: " + info.response);
-        }
-    });
-}
-
-
 // To check if user is logged in or not.
 function isLoggedIn(req) {
     if (typeof req.cookies.token == "undefined") {
@@ -85,75 +60,6 @@ async function comparePassword(password, hash) {
         return false;
     }
 }
-
-
-// Generate an OTP with user's email.
-const genOtp = async (email) => {
-    const userObj = {
-        name: email,
-        time: Date.now(),
-    };
-
-    let encoded = await encrypt(JSON.stringify(userObj));
-    return encoded.content;
-};
-
-
-// Verify the OTP.
-const verifyOtp = async (otp, email) => {
-    try {
-        const decipher = crypto.createDecipheriv(
-            algorithm,
-            Securitykey,
-            initVector
-        );
-        let decrypted = decipher.update(
-            Buffer.from(otp, "hex"),
-            "hex",
-            "utf-8"
-        );
-        decrypted += decipher.final("utf-8");
-        decrypted = JSON.parse(decrypted.toString());
-        if (
-            decrypted.name == email &&
-            Date.now() - decrypted.time <= timeWindow
-        )
-            return true;
-        return false;
-    } catch (e) {
-        return false;
-    }
-};
-
-
-// Encrypt a message with 'aes-256-cbc' algorithm.
-const encrypt = async (message) => {
-    const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
-    let encrypted = cipher.update(message, "utf-8", "hex");
-    encrypted += cipher.final("hex");
-
-    return {
-        iv: initVector.toString("hex"),
-        content: encrypted.toString("hex"),
-    };
-};
-
-
-// Decrypt the encoded message using 'aes-256-cbc' algorithm.
-const decrypt = async (encoded) => {
-    const decipher = crypto.createDecipheriv(
-        algorithm,
-        Securitykey,
-        initVector
-    );
-    let decrypted = decipher.update(
-        Buffer.from(encoded.content, "hex"),
-        "hex",
-        "utf-8"
-    );
-    decrypted += decipher.final("utf-8");
-    return decrypted.toString();
-};
 
 
 module.exports = {

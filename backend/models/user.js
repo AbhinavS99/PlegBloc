@@ -23,10 +23,6 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     // Not Required Fields.
-    isVerified: {
-        type: Boolean,
-        default: false,
-    },
     myCreatedCampaigns: [{
         type: Object
     }],

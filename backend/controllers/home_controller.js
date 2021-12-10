@@ -57,19 +57,6 @@ module.exports.signin = async (req, res) => {
             if (isSame == false) {
                 return sendErrorMessage(res, 200, "User has entered a wrong password.");
             }
-    
-            // Check if the user is verfied or not.
-            if (user.isVerified == false) {
-                // Generate OTP and sent this OTP on user's email address.
-                const actualOtp = await genOtp(user.email);
-                await sendEmail(user.username, user.email, actualOtp).catch(console.error);
-                return res.status(200).send({
-                    'isError': false,
-                    'isVerified': false,
-                    'email': user.email
-                });
-            }
-            
             // Generate access token.
             const accessToken = generateToken(_email);
             // set this access token into cookies.
@@ -77,7 +64,6 @@ module.exports.signin = async (req, res) => {
 
             return res.status(200).json({
                 'isError': false,
-                'isVerified': true,
                 'user': user
             });
         } else {
@@ -85,33 +71,6 @@ module.exports.signin = async (req, res) => {
         }
     })
 }
-
-
-module.exports.verifyOtp = async (req, res) => {
-    const _email = req.body.email;
-    const _userOtp = req.body.userOtp;
-
-    let isOtpCorrect = await verifyOtp(_userOtp, _email);
-    if (!isOtpCorrect) {
-        return sendErrorMessage(res, 200, `User has enetered a wrong OTP. Please repeat this process!`);
-    }
-
-    // Generate access token.
-    const accessToken = generateToken(_email);
-    // set this access token into cookies.
-    res.cookie("token", accessToken);
-
-    User.findOne({email: _email}, async (err, user) => {
-        if (err) return sendErrorMessage(res, 200, `User with ${_email} do not exist!`);
-        // set isVerified true.
-        user.isVerified = true;
-        await user.save();
-        return res.status(200).send({
-            'isError': false,
-            'user': user
-        }); 
-    });
-};
 
 
 module.exports.createCampaign = async (req, res) => {

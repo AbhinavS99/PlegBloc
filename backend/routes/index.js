@@ -8,6 +8,5 @@ router.get("/", homeController.home);
 router.post("/signup", homeController.signup);
 router.post("/signin", homeController.signin);
 router.post("/createCampaign", homeController.createCampaign);
-router.post("/verifyOtp", homeController.verifyOtp);
 
 module.exports = router;
