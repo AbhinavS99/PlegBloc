@@ -14,7 +14,15 @@ const Common = (props) => {
             <div className="row gy-4">
               {props.data.map((val, ind) => {
                 return (
-                  <Card imgsrc={web} title={val.name} des={val.description} />
+                  <Card
+                    imgsrc={web}
+                    title={val.name}
+                    des={val.description}
+                    campaignAddress={val.campaignAddress}
+                    contractFactoryAddress={val.contractFactoryAddress}
+                    manager={val.manager}
+                    campaign={val}
+                  />
                 );
               })}
             </div>
