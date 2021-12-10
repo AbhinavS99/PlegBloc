@@ -12,8 +12,6 @@ module.exports.home = (req, res) => {
 
 
 module.exports.signup = async (req, res) => {
-    console.log("Request aayi mere paas!!");
-
     const _name = req.body.name;
     const _username = req.body.username;
     const _email = req.body.email;
@@ -76,13 +74,10 @@ module.exports.signin = async (req, res) => {
             }
             
             const accessToken = generateToken(_email);
-            res.cookie("token", accessToken, {
-                    httpOnly: true,
-            });
+            res.cookie("token", accessToken);
             return res.status(200).json({
                 'isError': false,
                 'isVerified': true,
-                // 'token': accessToken,
                 'user': user
             });
         } else {
@@ -103,9 +98,8 @@ module.exports.verifyOtp = async (req, res) => {
 
     // set token in the cookies.
     const accessToken = generateToken(_email);
-    res.cookie("token", accessToken, {
-        httpOnly: true,
-    });
+    res.cookie("token", accessToken);
+    
     User.findOne({email: _email}, async (err, user) => {
         if (err) return sendErrorMessage(res, 404, `User with ${_email} do not exist!`);
         user.isVerified = true;
