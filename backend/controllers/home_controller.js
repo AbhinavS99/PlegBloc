@@ -127,3 +127,18 @@ module.exports.getUser = (req, res) => {
         });
     });
 }
+
+
+module.exports.updateUser = async (req, res) => {
+    const _email = req.body.email;
+    const _user = req.body.user;
+    User.findOne({email: _email}, async (err, user) => {
+        if (err) return sendErrorMessage(res, 200, "Error in finding the user from the DB.");
+        user = _user;
+        await user.save();
+        return res.status(200).send({
+            'isError': false,
+            'message': `User details updated with email ID ${_email}.`
+        });
+    });
+}

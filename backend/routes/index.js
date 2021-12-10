@@ -9,5 +9,6 @@ router.post("/signup", homeController.signup);
 router.post("/signin", homeController.signin);
 router.post("/createCampaign", homeController.createCampaign);
 router.post("/getUser", homeController.getUser);
+router.post("/updateUser", homeController.updateUser);
 
 module.exports = router;
