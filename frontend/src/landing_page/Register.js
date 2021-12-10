@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import web from "../../src/images/register.svg";
 import { signup } from "./../apis/core";
+import axios from 'axios';
+
+
 
 const Register = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState({
     name: "",
     username: "",
@@ -25,27 +29,53 @@ const Register = () => {
     });
   };
 
-  const formSubmit = async (e) => {
+  const formSubmit = (e) => {
     e.preventDefault();
     setFormDisabled(true);
     if (data.password !== data.confirm_password) {
       alert("Password and Confirm Password must be same!");
       setFormDisabled(false);
     } else {
-      const response = await signup(
-        data.name,
-        data.username,
-        data.email,
-        data.phone,
-        data.password
-      );
-      setFormDisabled(false);
-      if (response.isError) {
-        alert(response.message);
-      } else {
-        alert("Account Created Successfully. Redirecting to Login.");
-        <Navigate to="/login" />;
-      }
+      const _data = {
+        name: data.name,
+        username: data.username,
+        email: data.email,
+        phone: data.phone,
+        password: data.password,
+      };
+      // sending POST request.
+      axios.post("http://localhost:8000/signup", _data, { withCredentials: true })
+        .then((response) => {
+          setFormDisabled(false);
+          if (response.data.isError) {
+            alert(response.data.message);
+          } else {
+            alert("Account Created Successfully. Redirecting to Login.");
+            navigate('/login');
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching data: ", error);
+        })
+        .finally(() => {
+          console.log("Done");
+        });
+      // const response = await signup(
+      //   data.name,
+      //   data.username,
+      //   data.email,
+      //   data.phone,
+      //   data.password
+      // );
+      // setFormDisabled(false);
+      // console.log("=>R", response);
+      
+      // if (response.isError) {
+      //   alert(response.message);
+      // } else {
+      //   alert("Account Created Successfully. Redirecting to Login.");
+      //   navigate('/login');
+      // }
     }
   };
 

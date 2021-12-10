@@ -9,22 +9,21 @@ async function signup(name, username, email, phone, password) {
     password: password,
   };
   // sending POST request.
-  axios
-    .post("http://localhost:8000/signup", data, { withCredentials: true })
+  await axios.post("http://localhost:8000/signup", data, { withCredentials: true })
     .then((response) => {
-      console.log(response.data);
+      console.log("line 15", response.data);
       return response.data;
     })
     .catch((error) => {
       console.error("Error fetching data: ", error);
-      alert(error);
+      alert("Error fetching data: ", error);
     })
     .finally(() => {
       console.log("Done");
     });
 }
 
-async function signin(email, password) {
+function signin(email, password) {
   const data = {
     email: email,
     password: password,
