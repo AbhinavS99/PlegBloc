@@ -61,6 +61,8 @@ const AllContracts = () => {
         });
     }
   }, []);
+
+  useEffect(() => {}, []);
   return (
     <>
       <Common title="Active Campaigns" data={[]} />
