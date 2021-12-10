@@ -23,6 +23,7 @@ import Footer from "./Footer";
 import { isAuthenticated } from "./auth/helper";
 import PublicRoute from "./auth/PublicRoute";
 import PrivateRoute from "./auth/PrivateRoute";
+import CampaignDetail from "./main_page/CampaignDetail";
 
 const App = () => {
   return (
@@ -118,6 +119,15 @@ const App = () => {
           element={
             <PrivateRoute>
               <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          end
+          path="/campaignDetail"
+          element={
+            <PrivateRoute>
+              <CampaignDetail />
             </PrivateRoute>
           }
         />
