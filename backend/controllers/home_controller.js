@@ -146,3 +146,12 @@ module.exports.updateUser = async (req, res) => {
     });
   });
 };
+
+
+module.exports.logout = (req, res) => {
+  const _email = req.body.email;
+  res.clearCookie("token");
+  return res.status(200).send({
+    'isError': false
+  });
+}

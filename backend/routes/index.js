@@ -10,5 +10,6 @@ router.post("/signin", homeController.signin);
 router.post("/createCampaign", homeController.createCampaign);
 router.post("/getUser", homeController.getUser);
 router.post("/updateUser", homeController.updateUser);
+router.post("/logout", homeController.logout);
 
 module.exports = router;
