@@ -1,14 +1,10 @@
 require("dotenv").config();
-const {
-  sendErrorMessage,
-  isLoggedIn,
-  hash,
-  comparePassword,
-} = require("./functions");
+const { sendErrorMessage, isLoggedIn, hash, comparePassword, updateUserValues } = require("./functions");
 const { generateToken } = require("../config/jwt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Campaign = require("../models/campaign");
+const { mongo } = require("mongoose");
 
 module.exports.home = (req, res) => {
   return sendErrorMessage(res, 200, "Home Page!");
@@ -35,12 +31,7 @@ module.exports.signup = async (req, res) => {
         phone: _phone,
       };
       User.create(userObject, (err, user) => {
-        if (err)
-          return sendErrorMessage(
-            res,
-            200,
-            "Unable to create a user while signUp!"
-          );
+        if (err) return sendErrorMessage(res,200,"Unable to create a user while signUp!");
         console.log("Sign Up successfully.");
         return res.status(200).send({
           isError: false,
@@ -92,18 +83,10 @@ module.exports.createCampaign = async (req, res) => {
   const _campaignTargetAmount = req.body.targetAmount;
 
   Campaign.findOne({ name: _campaignName }, async (err, campaign) => {
-    if (err)
-      return sendErrorMessage(
-        res,
-        200,
-        "Error while finding this camapign from DB"
-      );
+    if (err) return sendErrorMessage(res, 200, "Error while finding this camapign from DB");
 
     if (!campaign) {
-      const _email = jwt.verify(
-        req.cookies.token,
-        process.env.ACCESS_TOKEN_SECRET
-      ).email;
+      const _email = jwt.verify(req.cookies.token, process.env.ACCESS_TOKEN_SECRET).email;
       let campaignObject = {
         manager: _email,
         name: _campaignName,
@@ -112,16 +95,10 @@ module.exports.createCampaign = async (req, res) => {
         targetAmount: _campaignTargetAmount,
       };
       Campaign.create(campaignObject, async (err, campaign) => {
-        if (err)
-          return sendErrorMessage(res, 200, "Error while creating a campaign.");
+        if (err) return sendErrorMessage(res, 200, "Error while creating a campaign.");
         // find the user from the DB and put this campaign into this user campaign list too.
         User.findOne({ email: _email }, async (err, user) => {
-          if (err)
-            return sendErrorMessage(
-              res,
-              200,
-              "Error in finding the user from the DB."
-            );
+          if (err) return sendErrorMessage(res, 200, "Error in finding the user from the DB.");
 
           await user.myCreatedCampaigns.push(campaign);
           await user.save();
@@ -142,11 +119,7 @@ module.exports.getUser = (req, res) => {
   const _email = req.body.email;
   User.findOne({ email: _email }, (err, user) => {
     if (err)
-      return sendErrorMessage(
-        res,
-        200,
-        "Error in finding the user from the DB."
-      );
+      return sendErrorMessage(res, 200, "Error in finding the user from the DB.");
 
     return res.status(200).send({
       isError: false,
@@ -159,15 +132,8 @@ module.exports.updateUser = async (req, res) => {
   const _email = req.body.email;
   const _user = req.body.user;
   User.findOne({ email: _email }, async (err, user) => {
-    if (err)
-      return sendErrorMessage(
-        res,
-        200,
-        "Error in finding the user from the DB."
-      );
-    console.log("Old user ", user);
-    user = _user;
-    console.log("new User ", user);
+    if (err) return sendErrorMessage(res, 200, "Error in finding the user from the DB.");
+    user = updateUserValues(user, _user);
     await user.save();
     return res.status(200).send({
       isError: false,

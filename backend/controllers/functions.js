@@ -61,10 +61,23 @@ async function comparePassword(password, hash) {
     }
 }
 
+// update user.
+function updateUserValues(mongoUser, newUser) {
+    mongoUser.name = newUser.name;
+    mongoUser.username = newUser.username;
+    mongoUser.email = newUser.email;
+    mongoUser.phone = newUser.phone;
+    mongoUser.myCampaignFactoryAddress = newUser.myCampaignFactoryAddress;
+    mongoUser.myCreatedCampaigns = newUser.myCreatedCampaigns;
+    mongoUser.myContributedCampaigns = newUser.myContributedCampaigns;
+    
+    return mongoUser;
+}
 
 module.exports = {
     sendErrorMessage,
     isLoggedIn,
     hash,
-    comparePassword
+    comparePassword,
+    updateUserValues
 }
