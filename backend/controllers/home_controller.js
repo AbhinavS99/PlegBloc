@@ -231,3 +231,25 @@ module.exports.myCampaigns = (req, res) =>{
     });
   });
 } 
+
+
+module.exports.myContributedCampaigns = (req, res) => {
+  if (isLoggedIn(req) == false)
+    return sendErrorMessage(res, 200, "You need to sign in first.");
+
+  const _email = req.body.email;
+
+  User.findOne({email: _email}, (err, user) => {
+    if (err)
+      return sendErrorMessage(
+        res,
+        200,
+        "Error in finding the user from the DB."
+      );
+
+    return res.status(200).send({
+      isError: false,
+      myContributedCampaigns: user.myContributedCampaigns,
+    });
+  });
+}
