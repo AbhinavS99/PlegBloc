@@ -1,5 +1,6 @@
 import Web3 from "web3";
 import compiledFactory from "../ethereum/build/CampaignFactory.json";
+import compiledCampaign from "../ethereum/build/Campaign.json";
 
 async function injectMetaMask() {
   const provider = detectProvider();
@@ -61,4 +62,27 @@ const createCampaignFactory = async () => {
   }
 };
 
-export { injectMetaMask, createCampaignFactory, detectProvider };
+const createCampaign = async (min_amount, factoryAddress) => {
+  const provider = detectProvider();
+  await provider.request({
+    method: "eth_requestAccounts",
+  });
+  const web3 = new Web3(provider);
+
+  let factory;
+  let campaign;
+  let accounts;
+  let address;
+
+  const create_campaign = async () => {
+    accounts = await web3.eth.getAccounts();
+    factory = await new web3.eth.Contract(compiledFactory.abi, factoryAddress);
+  };
+};
+
+export {
+  injectMetaMask,
+  createCampaignFactory,
+  detectProvider,
+  createCampaign,
+};
