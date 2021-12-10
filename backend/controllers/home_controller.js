@@ -190,3 +190,23 @@ module.exports.logout = (req, res) => {
     isError: false,
   });
 };
+
+
+module.exports.activeCampaigns = (req, res) => {
+  if (isLoggedIn(req) == false) return sendErrorMessage(res, 200, "You need to sign in first.");
+
+  Campaign.find({}, (err, allActiveCampaigns) => {
+    if (err)
+    return sendErrorMessage(
+      res,
+      200,
+      "Error in finding all campaigns from the DB."
+    );
+
+    return res.status(400).send({
+      'isError': false,
+      allActiveCampaigns: allActiveCampaigns
+    });
+  });
+}
+
