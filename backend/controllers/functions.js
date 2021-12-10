@@ -66,8 +66,5 @@ module.exports = {
     sendErrorMessage,
     isLoggedIn,
     hash,
-    comparePassword,
-    genOtp,
-    verifyOtp,
-    sendEmail
+    comparePassword
 }
