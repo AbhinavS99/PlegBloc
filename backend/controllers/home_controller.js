@@ -1,5 +1,5 @@
 require("dotenv").config();
-const {sendErrorMessage, isLoggedIn, hash, comparePassword, genOtp, verifyOtp, sendEmail} = require('./functions');
+const {sendErrorMessage, isLoggedIn, hash, comparePassword} = require('./functions');
 const {generateToken} = require('../config/jwt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
