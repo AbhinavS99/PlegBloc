@@ -1,10 +1,21 @@
 const mongoose = require("mongoose");
 
 const campaignSchema = new mongoose.Schema({
+    // Required Fields.
     // Manager is the one who create the campaign?
-    manager: {
+    manager: {                  // email ID
         type: String,
         required: true
+    },
+    campaignAddress: {
+        type: String,
+        default: "",
+        required: true
+    },
+    contractFactoryAddress: {
+        type: String,
+        required: true,
+        default: ""
     },
     name: {
         type: String,
@@ -22,9 +33,14 @@ const campaignSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    /*
-    contributedUsers: [{username, amountPaid, Date}, ...]
-    */
+    isActive: {
+        type: Boolean,
+        default: true
+    },
+    // Not Required Fields.
+    requests: [{
+        type: Object
+    }],
     contributedUsers: [{
         type: Object
     }],
