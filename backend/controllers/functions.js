@@ -4,9 +4,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require("crypto");
 const algorithm = "aes-256-cbc";
-const initVector = Buffer.from(process.env.initVector, "hex"); // crypto.randomBytes(16);
-const Securitykey = Buffer.from(process.env.security_key, "hex"); //crypto.randomBytes(32);
+const initVector = Buffer.from(process.env.initVector, "hex");
+const Securitykey = Buffer.from(process.env.security_key, "hex");
 const timeWindow = 60000 + 60000; // 1+1 minute
+
 
 // To show an error message on the UI.
 function sendErrorMessage(res, statusCode, message) {
@@ -18,6 +19,7 @@ function sendErrorMessage(res, statusCode, message) {
 };
 
 
+// Send the OTP on user's email ID.
 async function sendEmail(username, email, otp) {
     var transporter = nodemailer.createTransport({
         service: "gmail",
@@ -60,6 +62,7 @@ function isLoggedIn(req) {
 }
 
 
+// Hash the password.
 async function hash(password) {
     const saltRounds = 10;
     let salt = await bcrypt.genSalt(saltRounds);
@@ -68,14 +71,15 @@ async function hash(password) {
 }
 
 
+// Verify the hashed password.
 async function comparePassword(password, hash) {
     try {
         let ans = await bcrypt.compare(password, hash);
         if (ans) {
-            console.log("password correct");
+            console.log("Password is Correct.");
             return true;
         }
-        console.log("password incorrect");
+        console.log("Password is Incorrect.");
         return false;
     } catch (e) {
         return false;
@@ -83,6 +87,7 @@ async function comparePassword(password, hash) {
 }
 
 
+// Generate an OTP with user's email.
 const genOtp = async (email) => {
     const userObj = {
         name: email,
@@ -94,13 +99,14 @@ const genOtp = async (email) => {
 };
 
 
+// Verify the OTP.
 const verifyOtp = async (otp, email) => {
     try {
         const decipher = crypto.createDecipheriv(
             algorithm,
             Securitykey,
             initVector
-        ); //Buffer.from(encoded.iv, 'hex'));
+        );
         let decrypted = decipher.update(
             Buffer.from(otp, "hex"),
             "hex",
@@ -120,6 +126,7 @@ const verifyOtp = async (otp, email) => {
 };
 
 
+// Encrypt a message with 'aes-256-cbc' algorithm.
 const encrypt = async (message) => {
     const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
     let encrypted = cipher.update(message, "utf-8", "hex");
@@ -132,6 +139,7 @@ const encrypt = async (message) => {
 };
 
 
+// Decrypt the encoded message using 'aes-256-cbc' algorithm.
 const decrypt = async (encoded) => {
     const decipher = crypto.createDecipheriv(
         algorithm,

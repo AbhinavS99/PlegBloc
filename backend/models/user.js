@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
+    // Required Fields.
     name: {
         type: String,
         required: true,
@@ -21,10 +22,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    walletID: {
-        type: String,
-        required: true
-    },
+    // Not Required Fields.
     isVerified: {
         type: Boolean,
         default: false,
