@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     // Not Required Fields.
+    myCampaignFactoryAddress: {
+        type: String,
+        default: "",
+    },
+    
     myCreatedCampaigns: [{
         type: Object
     }],

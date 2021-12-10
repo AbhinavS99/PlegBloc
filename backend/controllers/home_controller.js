@@ -114,3 +114,16 @@ module.exports.createCampaign = async (req, res) => {
         }
     });
 }
+
+
+module.exports.getUser = (req, res) => {
+    const _email = req.body.email;
+    User.findOne({email: _email}, (err, user) => {
+        if (err) return sendErrorMessage(res, 200, "Error in finding the user from the DB.");
+
+        return res.status(200).send({
+            'isError': false,
+            'user': user
+        });
+    });
+}
