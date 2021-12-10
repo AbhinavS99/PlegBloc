@@ -216,8 +216,8 @@ module.exports.myCampaigns = (req, res) =>{
     return sendErrorMessage(res, 200, "You need to sign in first.");
 
   const _email = req.body.email;
-  
-  Campaign.find({email: _email}, (err, allMyCampaigns) => {
+
+  Campaign.find({manager: _email}, (err, allMyCampaigns) => {
     if (err)
       return sendErrorMessage(
         res,
