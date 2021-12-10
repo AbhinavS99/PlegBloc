@@ -1,16 +1,16 @@
-import axios from 'axios';
+import axios from "axios";
 
-async function signup(name, username, email, phone, wallet_id, password) {
-    const data = {
-        'name': name,
-        'username': username,
-        'email': email,
-        'phone': phone,
-        'wallet_id': wallet_id,
-        'password': password
-    };
-    // sending POST request.
-    axios.post("http://localhost:8000/signup", data, {withCredentials: true})
+async function signup(name, username, email, phone, password) {
+  const data = {
+    name: name,
+    username: username,
+    email: email,
+    phone: phone,
+    password: password,
+  };
+  // sending POST request.
+  axios
+    .post("http://localhost:8000/signup", data, { withCredentials: true })
     .then((response) => {
       console.log(response.data);
       return response.data;
@@ -23,15 +23,15 @@ async function signup(name, username, email, phone, wallet_id, password) {
       console.log("Done");
     });
 }
-
 
 async function signin(email, password) {
-    const data = {
-        'email': email,
-        'password': password
-    };
-    // sending POST request.
-    axios.post("http://localhost:8000/signin", data, {withCredentials: true})
+  const data = {
+    email: email,
+    password: password,
+  };
+  // sending POST request.
+  axios
+    .post("http://localhost:8000/signin", data, { withCredentials: true })
     .then((response) => {
       console.log(response.data);
       return response.data;
@@ -45,8 +45,4 @@ async function signin(email, password) {
     });
 }
 
-
-export {
-    signup,
-    signin
-};
+export { signup, signin };

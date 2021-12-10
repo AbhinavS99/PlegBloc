@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Navigate } from "react-router-dom";
 import web from "../../src/images/register.svg";
 import { signup } from "./../apis/core";
 
@@ -8,10 +9,11 @@ const Register = () => {
     username: "",
     phone: "",
     email: "",
-    wallet_id: "",
     password: "",
     confirm_password: "",
   });
+
+  const [isFormDisabled, setFormDisabled] = useState(false);
 
   const InputEvent = (event) => {
     const { name, value } = event.target;
@@ -25,23 +27,26 @@ const Register = () => {
 
   const formSubmit = async (e) => {
     e.preventDefault();
-    if (data.password != data.confirm_password) {
+    setFormDisabled(true);
+    if (data.password !== data.confirm_password) {
       alert("Password and Confirm Password must be same!");
+      setFormDisabled(false);
+    } else {
+      const response = await signup(
+        data.name,
+        data.username,
+        data.email,
+        data.phone,
+        data.password
+      );
+      setFormDisabled(false);
+      if (response.isError) {
+        alert(response.message);
+      } else {
+        alert("Account Created Successfully. Redirecting to Login.");
+        <Navigate to="/login" />;
+      }
     }
-    const response = await signup(
-      data.name,
-      data.username,
-      data.email,
-      data.phone,
-      "coder shaney",
-      data.password
-    );
-    /*
-    if isError == true:
-        show the error on the UI.
-    if isError == false:
-        account created succesfully, show this alert and redirect the user to the login page.
-    */
   };
 
   return (
@@ -71,6 +76,7 @@ const Register = () => {
                             value={data.name}
                             onChange={InputEvent}
                             placeholder="Enter your name"
+                            disabled={isFormDisabled}
                           />
                         </div>
                         <div className="mb-3">
@@ -88,6 +94,7 @@ const Register = () => {
                             value={data.username}
                             onChange={InputEvent}
                             placeholder="Username"
+                            disabled={isFormDisabled}
                           />
                         </div>
                         <div className="mb-3">
@@ -105,6 +112,7 @@ const Register = () => {
                             value={data.phone}
                             onChange={InputEvent}
                             placeholder="Mobile No"
+                            disabled={isFormDisabled}
                           />
                         </div>
                         <div className="mb-3">
@@ -122,28 +130,11 @@ const Register = () => {
                             value={data.email}
                             onChange={InputEvent}
                             placeholder="name@example.com"
+                            disabled={isFormDisabled}
                           />
                           <div className="invalid-feedback">
                             Please provide a valid Email Address.
                           </div>
-                        </div>
-                        <div className="mb-3">
-                          <label
-                            for="exampleFormControlInput1"
-                            className="form-label"
-                          >
-                            Wallet ID
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="exampleFormControlInput1"
-                            name="wallet_id"
-                            value={data.wallet_id}
-                            placeholder="Wallet ID"
-                            aria-label="readonly input example"
-                            readonly
-                          />
                         </div>
                         <div className="mb-3">
                           <label
@@ -157,8 +148,10 @@ const Register = () => {
                             className="form-control"
                             id="exampleInputPassword1"
                             name="password"
+                            placeholder="Password"
                             value={data.password}
                             onChange={InputEvent}
+                            disabled={isFormDisabled}
                           />
                         </div>
                         <div className="mb-3">
@@ -173,8 +166,10 @@ const Register = () => {
                             className="form-control"
                             id="exampleInputPassword1"
                             name="confirm_password"
+                            placeholder="Confirm Password"
                             value={data.confirm_password}
                             onChange={InputEvent}
+                            disabled={isFormDisabled}
                           />
                         </div>
                         <div className="col-12">
