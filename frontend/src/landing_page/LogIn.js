@@ -21,6 +21,7 @@ const LogIn = () => {
   const formSubmit = async (e) => {
     e.preventDefault();
     const response = await signin(data.email, data.password);
+    alert("Success!");
     /*
     if isError == false and isVerified == true:
         go to the home page, where user can create campaigns.
