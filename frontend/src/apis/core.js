@@ -9,7 +9,8 @@ async function signup(name, username, email, phone, password) {
     password: password,
   };
   // sending POST request.
-  await axios.post("http://localhost:8000/signup", data, { withCredentials: true })
+  await axios
+    .post("http://localhost:8000/signup", data, { withCredentials: true })
     .then((response) => {
       console.log("line 15", response.data);
       return response.data;

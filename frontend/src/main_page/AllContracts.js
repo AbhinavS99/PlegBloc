@@ -1,9 +1,61 @@
 import React, { useEffect, useState } from "react";
 import Common from "./Common";
-import { injectMetaMask } from "../eth_scripts/core";
+import { injectMetaMask, createCampaignFactory } from "../eth_scripts/core";
+import { isAuthenticated, getCurrentUser } from "../auth/helper";
+
+import axios from "axios";
 
 const AllContracts = () => {
-  useEffect( () => {injectMetaMask()}, [])
+  useEffect(() => {
+    injectMetaMask();
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      const user_email = getCurrentUser();
+      const data = {
+        email: user_email,
+      };
+      axios
+        .post("http://localhost:8000/getUser", data, { withCredentials: true })
+        .then((response) => {
+          if (response.data.isError) {
+            console.log(response.data.message);
+          } else {
+            const user = response.data.user;
+            console.log(user);
+            if (user.myCampaignFactoryAddress === "") {
+              const campaignFactoryAddress = createCampaignFactory();
+              user.myCampaignFactoryAddress = campaignFactoryAddress;
+              const data = {
+                email: user_email,
+                user: user,
+              };
+
+              axios
+                .post("http://localhost:8000/updateUser", data, {
+                  withCredentials: true,
+                })
+                .then((response) => {
+                  console.log(response.data.message);
+                })
+                .catch((error) => {
+                  console.error("Error fetching data: ", error);
+                })
+                .finally(() => {
+                  console.log("Factory Done");
+                });
+            }
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching data: ", error);
+        })
+        .finally(() => {
+          console.log("Done");
+        });
+    }
+  }, []);
   return (
     <>
       <Common title="Active Campaigns" data={[]} />

@@ -16,4 +16,12 @@ function isAuthenticated() {
   }
 }
 
-export { isAuthenticated };
+// Call after checking isAuthenticated
+function getCurrentUser() {
+  const token = Cookies.get("token");
+  const payload = jwt.verify(token, process.env.REACT_APP_JWT_SECRET);
+  const email = payload.email;
+  return email;
+}
+
+export { isAuthenticated, getCurrentUser };

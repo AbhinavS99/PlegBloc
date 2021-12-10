@@ -1,12 +1,16 @@
 import React, { useState } from "react";
-import {isAuthenticated} from "./../auth/helper";
-import {signin} from "./../apis/core";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const LogIn = () => {
   const [data, setData] = useState({
     email: "",
     password: "",
   });
+
+  const [isFormDisabled, setFormDisabled] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const InputEvent = (event) => {
     const { name, value } = event.target;
@@ -20,16 +24,28 @@ const LogIn = () => {
 
   const formSubmit = async (e) => {
     e.preventDefault();
-    const response = await signin(data.email, data.password);
-    alert("Success!");
-    /*
-    if isError == false and isVerified == true:
-        go to the home page, where user can create campaigns.
-    if isError == false and isVerified == false:
-        go to the enter OTP page (make sure to hold email ID with you).
-    if isError == true:
-        show the error on the UI.
-    */
+    setLoading(true);
+    setFormDisabled(true);
+
+    axios
+      .post("http://localhost:8000/signin", data, { withCredentials: true })
+      .then((response) => {
+        if (response.data.isError) {
+          alert(response.data.message);
+        } else {
+          navigate("/allcontracts");
+          window.location.reload(true);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data: ", error);
+        console.log(error);
+      })
+      .finally(() => {
+        setFormDisabled(false);
+        setLoading(false);
+        console.log("Done");
+      });
   };
 
   return (
@@ -52,7 +68,9 @@ const LogIn = () => {
                   name="email"
                   value={data.email}
                   onChange={InputEvent}
+                  disabled={isFormDisabled}
                   placeholder="name@example.com"
+                  required
                 />
                 <div className="invalid-feedback">
                   Please provide a valid Email Address.
@@ -69,11 +87,23 @@ const LogIn = () => {
                   name="password"
                   value={data.password}
                   onChange={InputEvent}
+                  disabled={isFormDisabled}
+                  required
                 />
               </div>
               <div className="col-12">
-                <button className="btn btn-outline-primary" type="submit">
-                  Log In
+                <button
+                  className="btn btn-outline-primary"
+                  type="submit"
+                  disabled={isFormDisabled}
+                >
+                  <span
+                    class="spinner-grow spinner-grow-sm"
+                    role="status"
+                    style={isLoading ? {} : { display: "none" }}
+                    aria-hidden="true"
+                  ></span>
+                  {isLoading ? <span>Logging In...</span> : <span>Log In</span>}
                 </button>
               </div>
             </form>
