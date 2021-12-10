@@ -24,27 +24,32 @@ const AllContracts = () => {
           } else {
             const user = response.data.user;
             console.log(user);
-            if (user.myCampaignFactoryAddress === "") {
-              const campaignFactoryAddress = createCampaignFactory();
-              user.myCampaignFactoryAddress = campaignFactoryAddress;
-              const data = {
-                email: user_email,
-                user: user,
-              };
-
-              axios
-                .post("http://localhost:8000/updateUser", data, {
-                  withCredentials: true,
-                })
-                .then((response) => {
-                  console.log(response.data.message);
-                })
-                .catch((error) => {
-                  console.error("Error fetching data: ", error);
-                })
-                .finally(() => {
-                  console.log("Factory Done");
-                });
+            if (
+              user.myCampaignFactoryAddress !== null &&
+              user.myCampaignFactoryAddress === ""
+            ) {
+              const campaignFactoryAddress = createCampaignFactory().then(
+                (address) => {
+                  user.myCampaignFactoryAddress = address;
+                  const data = {
+                    email: user_email,
+                    user: user,
+                  };
+                  axios
+                    .post("http://localhost:8000/updateUser", data, {
+                      withCredentials: true,
+                    })
+                    .then((response) => {
+                      console.log(response.data.message);
+                    })
+                    .catch((error) => {
+                      console.error("Error fetching data: ", error);
+                    })
+                    .finally(() => {
+                      console.log("Factory Done");
+                    });
+                }
+              );
             }
           }
         })
