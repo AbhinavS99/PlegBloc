@@ -21,6 +21,8 @@ import MainNavBar from "./main_page/MainNavBar";
 import Footer from "./Footer";
 
 import { isAuthenticated } from "./auth/helper";
+import PublicRoute from "./auth/PublicRoute";
+import PrivateRoute from "./auth/PrivateRoute";
 
 const App = () => {
   return (
@@ -28,17 +30,97 @@ const App = () => {
       {!isAuthenticated() && <Navbar />}
       {isAuthenticated() && <MainNavBar />}
       <Routes>
-        <Route end path="/" element={<Home />} />
-        <Route end path="/about" element={<About />} />
-        <Route end path="/contact" element={<Contact />} />
-        <Route end path="/login" element={<LogIn />} />
-        <Route end path="/register" element={<Register />} />
+        <Route
+          end
+          path="/"
+          element={
+            <PublicRoute>
+              <Home />
+            </PublicRoute>
+          }
+        />
+        <Route
+          end
+          path="/about"
+          element={
+            <PublicRoute>
+              <About />
+            </PublicRoute>
+          }
+        />
+        <Route
+          end
+          path="/contact"
+          element={
+            <PublicRoute>
+              <Contact />
+            </PublicRoute>
+          }
+        />
+        <Route
+          end
+          path="/login"
+          element={
+            <PublicRoute>
+              <LogIn />
+            </PublicRoute>
+          }
+        />
+        <Route
+          end
+          path="/register"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
 
-        <Route end path="/allcontracts" element={<AllContracts />} />
-        <Route end path="/contributions" element={<Contributions />} />
-        <Route end path="/personalcampaigns" element={<PersonalCampaigns />} />
-        <Route end path="/createcontract" element={<CreateContract />} />
-        <Route end path="/profile" element={<Profile />} />
+        <Route
+          end
+          path="/allcontracts"
+          element={
+            <PrivateRoute>
+              <AllContracts />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          end
+          path="/contributions"
+          element={
+            <PrivateRoute>
+              <Contributions />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          end
+          path="/personalcampaigns"
+          element={
+            <PrivateRoute>
+              <PersonalCampaigns />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          end
+          path="/createcontract"
+          element={
+            <PrivateRoute>
+              <CreateContract />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          end
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
 
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

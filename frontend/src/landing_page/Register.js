@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import web from "../../src/images/register.svg";
-import {signup} from "./../apis/core";
+import { signup } from "./../apis/core";
 
 const Register = () => {
   const [data, setData] = useState({
@@ -28,7 +28,14 @@ const Register = () => {
     if (data.password != data.confirm_password) {
       alert("Password and Confirm Password must be same!");
     }
-    const response = await signup(data.name, data.username, data.email, data.phone, data.wallet_id, data.password);
+    const response = await signup(
+      data.name,
+      data.username,
+      data.email,
+      data.phone,
+      "coder shaney",
+      data.password
+    );
     /*
     if isError == true:
         show the error on the UI.
