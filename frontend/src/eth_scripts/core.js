@@ -70,14 +70,44 @@ const createCampaign = async (min_amount, factoryAddress) => {
   const web3 = new Web3(provider);
 
   let factory;
+  let campaigns;
   let campaign;
   let accounts;
   let address;
+  let flag = 0;
 
   const create_campaign = async () => {
     accounts = await web3.eth.getAccounts();
     factory = await new web3.eth.Contract(compiledFactory.abi, factoryAddress);
+
+    await factory.methods
+      .createCampaign(min_amount)
+      .send({
+        from: accounts[0],
+        gas: "2000000",
+      })
+      .catch((error) => {
+        console.log(error.message);
+        alert(error.message);
+        flag = 1;
+      });
+
+    campaigns = await factory.methods.getDeployedCampaigns().call();
+    console.log(campaigns);
+    address = campaigns.at(-1);
+
+    campaign = await new web3.eth.Contract(compiledCampaign.abi, address);
+    if (flag === 1) {
+      address = -1;
+    }
   };
+
+  try {
+    await create_campaign();
+    return address;
+  } catch {
+    return "";
+  }
 };
 
 export {

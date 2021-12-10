@@ -1,16 +1,20 @@
 require("dotenv").config();
-const { sendErrorMessage, isLoggedIn, hash, comparePassword, updateUserValues } = require("./functions");
+const {
+  sendErrorMessage,
+  isLoggedIn,
+  hash,
+  comparePassword,
+  updateUserValues,
+} = require("./functions");
 const { generateToken } = require("../config/jwt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Campaign = require("../models/campaign");
 const { mongo } = require("mongoose");
 
-
 module.exports.home = (req, res) => {
   return sendErrorMessage(res, 200, "Home Page!");
 };
-
 
 module.exports.signup = async (req, res) => {
   const _name = req.body.name;
@@ -33,7 +37,12 @@ module.exports.signup = async (req, res) => {
         phone: _phone,
       };
       User.create(userObject, (err, user) => {
-        if (err) return sendErrorMessage(res,200,"Unable to create a user while signUp!");
+        if (err)
+          return sendErrorMessage(
+            res,
+            200,
+            "Unable to create a user while signUp!"
+          );
         console.log("Sign Up successfully.");
         return res.status(200).send({
           isError: false,
@@ -45,7 +54,6 @@ module.exports.signup = async (req, res) => {
     }
   });
 };
-
 
 module.exports.signin = async (req, res) => {
   const _email = req.body.email;
@@ -75,10 +83,10 @@ module.exports.signin = async (req, res) => {
   });
 };
 
-
 module.exports.createCampaign = async (req, res) => {
-  if (isLoggedIn(req) == false) return sendErrorMessage(res, 200, "You need to sign in first.");
-
+  if (isLoggedIn(req) == false)
+    return sendErrorMessage(res, 200, "You need to sign in first.");
+  console.log(req.body);
   const _campaignName = req.body.name;
   const _campaignDesc = req.body.description;
   const _campaignMinAmount = req.body.minAmount;
@@ -87,46 +95,67 @@ module.exports.createCampaign = async (req, res) => {
   const _contractFactoryAddress = req.body.contractFactoryAddress;
   const _managerEmail = req.body.manager;
 
-  Campaign.findOne({ campaignAddress: _campaignAddress }, async (err, campaign) => {
-    if (err) return sendErrorMessage(res, 200, "Error while finding this camapign from DB");
+  Campaign.findOne(
+    { campaignAddress: _campaignAddress },
+    async (err, campaign) => {
+      if (err)
+        return sendErrorMessage(
+          res,
+          200,
+          "Error while finding this camapign from DB"
+        );
 
-    if (!campaign) {
-      let campaignObject = {
-        manager: _managerEmail,
-        name: _campaignName,
-        description: _campaignDesc,
-        minAmount: _campaignMinAmount,
-        targetAmount: _campaignTargetAmount,
-        campaignAddress: _campaignAddress,
-        contractFactoryAddress: _contractFactoryAddress
-      };
-      Campaign.create(campaignObject, async (err, campaign) => {
-        if (err) return sendErrorMessage(res, 200, "Error while creating a campaign.");
-        // find the user from the DB and put this campaign into this user campaign list too.
-        User.findOne({ email: _managerEmail }, async (err, user) => {
-          if (err) return sendErrorMessage(res, 200, "Error in finding the user from the DB.");
+      if (!campaign) {
+        let campaignObject = {
+          manager: _managerEmail,
+          name: _campaignName,
+          description: _campaignDesc,
+          minAmount: _campaignMinAmount,
+          targetAmount: _campaignTargetAmount,
+          campaignAddress: _campaignAddress,
+          contractFactoryAddress: _contractFactoryAddress,
+        };
+        Campaign.create(campaignObject, async (err, campaign) => {
+          if (err)
+            return sendErrorMessage(
+              res,
+              200,
+              "Error while creating a campaign."
+            );
+          // find the user from the DB and put this campaign into this user campaign list too.
+          User.findOne({ email: _managerEmail }, async (err, user) => {
+            if (err)
+              return sendErrorMessage(
+                res,
+                200,
+                "Error in finding the user from the DB."
+              );
 
-          await user.myCreatedCampaigns.push(campaign);
-          await user.save();
+            await user.myCreatedCampaigns.push(campaign);
+            await user.save();
 
-          return res.status(200).send({
-            isError: false,
-            message: 'Campaign Created Successfully.'
+            return res.status(200).send({
+              isError: false,
+              message: "Campaign Created Successfully.",
+            });
           });
         });
-      });
-    } else {
-      return sendErrorMessage(res, 200, "This campaign already exist!");
+      } else {
+        return sendErrorMessage(res, 200, "This campaign already exist!");
+      }
     }
-  });
+  );
 };
-
 
 module.exports.getUser = (req, res) => {
   const _email = req.body.email;
   User.findOne({ email: _email }, (err, user) => {
     if (err)
-      return sendErrorMessage(res, 200, "Error in finding the user from the DB.");
+      return sendErrorMessage(
+        res,
+        200,
+        "Error in finding the user from the DB."
+      );
 
     return res.status(200).send({
       isError: false,
@@ -135,12 +164,16 @@ module.exports.getUser = (req, res) => {
   });
 };
 
-
 module.exports.updateUser = async (req, res) => {
   const _email = req.body.email;
   const _user = req.body.user;
   User.findOne({ email: _email }, async (err, user) => {
-    if (err) return sendErrorMessage(res, 200, "Error in finding the user from the DB.");
+    if (err)
+      return sendErrorMessage(
+        res,
+        200,
+        "Error in finding the user from the DB."
+      );
     user = updateUserValues(user, _user);
     await user.save();
     return res.status(200).send({
@@ -150,11 +183,10 @@ module.exports.updateUser = async (req, res) => {
   });
 };
 
-
 module.exports.logout = (req, res) => {
   const _email = req.body.email;
   res.clearCookie("token");
   return res.status(200).send({
-    'isError': false
+    isError: false,
   });
-}
+};
