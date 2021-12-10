@@ -32,6 +32,7 @@ module.exports.signup = async (req, res) => {
             };
             User.create(userObject, (err, user) => {
                 if (err) return sendErrorMessage(res, 200, "Unable to create a user while signUp!");
+                console.log("Sign Up successfully.");
                 return res.status(200).send({
                     'isError': false,
                     'user': user
@@ -51,7 +52,7 @@ module.exports.signin = async (req, res) => {
     
     User.findOne({email: _email}, async (err, user) => {
         if (err) return sendErrorMessage(res, 200, "Error in finding this user from DB");
-        console.log('=>', user);
+        
         if (user) {
             const isSame = await comparePassword(_password, user.password);
             if (isSame == false) {
@@ -61,7 +62,7 @@ module.exports.signin = async (req, res) => {
             const accessToken = generateToken(_email);
             // set this access token into cookies.
             res.cookie("token", accessToken);
-
+            console.log("Sign In successfully.");
             return res.status(200).json({
                 'isError': false,
                 'user': user
