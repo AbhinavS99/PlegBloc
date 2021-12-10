@@ -1,5 +1,6 @@
 import React from "react";
 import Card from "./Card";
+import web from "../../src/images/demo.jpg";
 
 const Common = (props) => {
   return (
@@ -13,7 +14,7 @@ const Common = (props) => {
             <div className="row gy-4">
               {props.data.map((val, ind) => {
                 return (
-                  <Card imgsrc={val.imgsrc} title={val.title} des={val.des} />
+                  <Card imgsrc={web} title={val.name} des={val.description} />
                 );
               })}
             </div>

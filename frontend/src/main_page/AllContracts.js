@@ -6,6 +6,8 @@ import { isAuthenticated, getCurrentUser } from "../auth/helper";
 import axios from "axios";
 
 const AllContracts = () => {
+  const [campaigns, setCampaigns] = useState([]);
+
   useEffect(() => {
     injectMetaMask();
   }, []);
@@ -50,6 +52,21 @@ const AllContracts = () => {
                     });
                 }
               );
+            } else {
+              axios
+                .post(
+                  "http://localhost:8000/activeCampaigns",
+                  {},
+                  { withCredentials: true }
+                )
+                .then((response) => {
+                  if (response.data.isError) {
+                    alert(response.data.message);
+                  } else {
+                    setCampaigns(response.data.allActiveCampaigns);
+                    console.log(campaigns);
+                  }
+                });
             }
           }
         })
@@ -65,7 +82,7 @@ const AllContracts = () => {
   useEffect(() => {}, []);
   return (
     <>
-      <Common title="Active Campaigns" data={[]} />
+      <Common title="Active Campaigns" data={campaigns} />
     </>
   );
 };
