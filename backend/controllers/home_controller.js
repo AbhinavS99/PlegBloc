@@ -77,30 +77,33 @@ module.exports.signin = async (req, res) => {
 
 
 module.exports.createCampaign = async (req, res) => {
-  if (isLoggedIn(req) == false)
-    return sendErrorMessage(res, 200, "You need to sign in first.");
+  if (isLoggedIn(req) == false) return sendErrorMessage(res, 200, "You need to sign in first.");
 
   const _campaignName = req.body.name;
   const _campaignDesc = req.body.description;
   const _campaignMinAmount = req.body.minAmount;
   const _campaignTargetAmount = req.body.targetAmount;
+  const _campaignAddress = req.body.campaignAddress;
+  const _contractFactoryAddress = req.body.contractFactoryAddress;
+  const _managerEmail = req.body.manager;
 
-  Campaign.findOne({ name: _campaignName }, async (err, campaign) => {
+  Campaign.findOne({ campaignAddress: _campaignAddress }, async (err, campaign) => {
     if (err) return sendErrorMessage(res, 200, "Error while finding this camapign from DB");
 
     if (!campaign) {
-      const _email = jwt.verify(req.cookies.token, process.env.ACCESS_TOKEN_SECRET).email;
       let campaignObject = {
-        manager: _email,
+        manager: _managerEmail,
         name: _campaignName,
         description: _campaignDesc,
         minAmount: _campaignMinAmount,
         targetAmount: _campaignTargetAmount,
+        campaignAddress: _campaignAddress,
+        contractFactoryAddress: _contractFactoryAddress
       };
       Campaign.create(campaignObject, async (err, campaign) => {
         if (err) return sendErrorMessage(res, 200, "Error while creating a campaign.");
         // find the user from the DB and put this campaign into this user campaign list too.
-        User.findOne({ email: _email }, async (err, user) => {
+        User.findOne({ email: _managerEmail }, async (err, user) => {
           if (err) return sendErrorMessage(res, 200, "Error in finding the user from the DB.");
 
           await user.myCreatedCampaigns.push(campaign);
@@ -108,7 +111,7 @@ module.exports.createCampaign = async (req, res) => {
 
           return res.status(200).send({
             isError: false,
-            user: user,
+            message: 'Campaign Created Successfully.'
           });
         });
       });
