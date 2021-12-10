@@ -209,3 +209,25 @@ module.exports.activeCampaigns = (req, res) => {
     });
   });
 };
+
+
+module.exports.myCampaigns = (req, res) =>{
+  if (isLoggedIn(req) == false)
+    return sendErrorMessage(res, 200, "You need to sign in first.");
+
+  const _email = req.body.email;
+  
+  Campaign.find({email: _email}, (err, allMyCampaigns) => {
+    if (err)
+      return sendErrorMessage(
+        res,
+        200,
+        "Error in finding all my campaigns from the DB."
+      );
+
+    return res.status(200).send({
+      isError: false,
+      allMyCampaigns: allMyCampaigns,
+    });
+  });
+} 
