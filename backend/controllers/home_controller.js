@@ -6,9 +6,11 @@ const User = require("../models/user");
 const Campaign = require("../models/campaign");
 const { mongo } = require("mongoose");
 
+
 module.exports.home = (req, res) => {
   return sendErrorMessage(res, 200, "Home Page!");
 };
+
 
 module.exports.signup = async (req, res) => {
   const _name = req.body.name;
@@ -44,8 +46,8 @@ module.exports.signup = async (req, res) => {
   });
 };
 
+
 module.exports.signin = async (req, res) => {
-  // const data = JSON.parse(Object.keys(req.body)[0]);
   const _email = req.body.email;
   const _password = req.body.password;
 
@@ -72,6 +74,7 @@ module.exports.signin = async (req, res) => {
     }
   });
 };
+
 
 module.exports.createCampaign = async (req, res) => {
   if (isLoggedIn(req) == false)
@@ -115,6 +118,7 @@ module.exports.createCampaign = async (req, res) => {
   });
 };
 
+
 module.exports.getUser = (req, res) => {
   const _email = req.body.email;
   User.findOne({ email: _email }, (err, user) => {
@@ -127,6 +131,7 @@ module.exports.getUser = (req, res) => {
     });
   });
 };
+
 
 module.exports.updateUser = async (req, res) => {
   const _email = req.body.email;

@@ -1,12 +1,6 @@
 require('dotenv').config();
-const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const crypto = require("crypto");
-const algorithm = "aes-256-cbc";
-const initVector = Buffer.from(process.env.initVector, "hex");
-const Securitykey = Buffer.from(process.env.security_key, "hex");
-const timeWindow = 60000 + 60000; // 1+1 minute
 
 
 // To show an error message on the UI.
