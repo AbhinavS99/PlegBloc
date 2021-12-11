@@ -431,6 +431,43 @@ const getAllCampaigns = async () => {
   }
   return all_campaigns;
 };
+
+const contributeToCampaign = async (amount, campaign_address) => {
+  const provider = detectProvider();
+  await provider.request({
+    method: "eth_requestAccounts",
+  });
+  const web3 = new Web3(provider);
+
+  let campaign;
+  let accounts;
+  let flag = 0;
+
+  const contribute_campaign = async () => {
+    accounts = await web3.eth.getAccounts();
+    campaign = await new web3.eth.Contract(
+      compiledCampaign.abi,
+      campaign_address
+    );
+    await campaign.methods
+      .contribute()
+      .send({
+        value: amount.toString(),
+        from: accounts[0],
+      })
+      .then(() => {
+        flag = 1;
+      })
+      .catch((e) => {
+        console.log(e);
+        flag = 0;
+      });
+  };
+
+  await contribute_campaign();
+  return flag;
+};
+
 export {
   injectMetaMask,
   // createCampaignFactory,
@@ -442,4 +479,5 @@ export {
   getMobile,
   getFactory,
   getAllCampaigns,
+  contributeToCampaign,
 };

@@ -39,7 +39,6 @@ const LogIn = () => {
         email: data.email,
         factory: factory,
       };
-      alert(factory);
       setCookie(obj);
       navigate("/allcontracts");
       window.location.reload(true);
