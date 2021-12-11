@@ -159,45 +159,26 @@ const loginUser = async (username, password) => {
   const web3 = new Web3(provider);
 
   let userFactory;
+  let login_flag = 0;
   let accounts;
-  let flag = 0;
-  let login_count = 0;
-
   const login_user = async () => {
     accounts = await web3.eth.getAccounts();
     const userFactoryAddress = addressUser;
     
     userFactory = await new web3.eth.Contract(compiledUserFactory.abi, userFactoryAddress);
-
-    // await userFactory.methods
-    //   .login(username, password)
-    //   .send({
-    //     from: accounts[0],
-    //     gas: "2000000",
-    //   })
-    //   .catch((error) => {
-    //     console.log(error.message);
-    //     flag = 1;
-    //   });
-
-      alert(username + password);
-      login_count = await userFactory.methods.login(username, password).call();
-      alert("login_count = ", login_count);
-      // campaign = await new web3.eth.Contract(compiledCampaign.abi, address);
-      // if (flag === 1) {
-      //   address = -1;
-      // }
+      await userFactory.methods.login(username, password).call().then( (e) =>{
+          login_flag = e;
+      });
   };
 
 
-
-  const returnValue = await login_user();
-  // console.log("-0-0", returnValue);
-  // if (flag == 0) {
-  //   return "success";
-  // } else {
-  //   return "failure";
-  // }
+  try{
+    await login_user();
+    console.log("Login Flag = ", login_flag);
+    return login_flag;
+  } catch{
+    return -1;
+  }
 }
 
 

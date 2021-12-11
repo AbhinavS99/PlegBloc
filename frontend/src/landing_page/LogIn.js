@@ -28,8 +28,17 @@ const LogIn = () => {
     setLoading(true);
     setFormDisabled(true);
 
-    await loginUser(data.email, data.password);
+    const flag = await loginUser(data.email, data.password);
+    if (flag == 1){
+        alert("Logged in Succesfully :)");
+        navigate("/allcontracts");
+        window.location.reload(true);
+      }
 
+    setFormDisabled(false);
+    setLoading(false);
+    
+    
     // axios
     //   .post("http://localhost:8000/signin", data, { withCredentials: true })
     //   .then((response) => {
