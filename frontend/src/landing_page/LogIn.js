@@ -31,6 +31,8 @@ const LogIn = () => {
     const flag = await loginUser(data.email, data.password);
     if (flag == 1){
         alert("Logged in Succesfully :)");
+        var testObject ={email:data.email, isValid:true};
+        localStorage.setItem('validation_token', JSON.stringify(testObject));
         navigate("/allcontracts");
         window.location.reload(true);
       }
