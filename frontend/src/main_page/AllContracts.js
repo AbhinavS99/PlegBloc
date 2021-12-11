@@ -8,7 +8,7 @@ const AllContracts = () => {
   useEffect(() => {
     if (isAuthenticated()) {
       getAllCampaigns().then( (factories) =>{
-          
+          console.log(factories);
       });
     }
   }, []);
@@ -16,7 +16,7 @@ const AllContracts = () => {
   // useEffect(() => {
   //   if (isAuthenticated()) {
   //     const user_email = getCurrentUser();
-  //     const data = {
+  //     const data = {n
   //       email: user_email,
   //     };
   //     axios

@@ -35,7 +35,7 @@ const detectProvider = () => {
 
 
 
-const createCampaignFactory = async () => {
+const get_campaigns_of = async (factory_address) => {
   const provider = detectProvider();
   await provider.request({
     method: "eth_requestAccounts",
@@ -43,31 +43,74 @@ const createCampaignFactory = async () => {
   const web3 = new Web3(provider);
 
   let factory;
-  let accounts;
-  let address;
+  let campaigns;
   const create_factory = async () => {
-    accounts = await web3.eth.getAccounts();
-    factory = await new web3.eth.Contract(compiledFactory.abi)
-      .deploy({
-        data: "0x" + compiledFactory.evm.bytecode.object,
-      })
-      .send({
-        from: accounts[0],
-        gas: "2000000",
-      })
-      .catch((error) => {
-        console.log(error.message);
-        alert(error.message);
-      });
-    address = factory.options.address;
+    factory = await new web3.eth.Contract(compiledFactory.abi, factory_address);
+    campaigns = await factory.methods.getDeployedCampaigns().call();  
   };
   try {
     await create_factory();
-    return address;
+
+    return campaigns;
   } catch {
-    return "";
+    return [];
   }
 };
+
+const get_campaigns_at = async (campaign_address) => {
+  const provider = detectProvider();
+  await provider.request({
+    method: "eth_requestAccounts",
+  });
+  const web3 = new Web3(provider);
+
+  let campaign;
+  const create_factory = async () => {
+    campaign = await new web3.eth.Contract(compiledCampaign.abi, campaign_address);  
+  };
+  try {
+    await create_factory();
+
+    return campaign;
+  } catch {
+    return null;
+  }
+};
+
+const get_campaign_info = async (campaign_address) => {
+  let campaign = await get_campaigns_at(campaign_address);
+  // string public creator_email;
+  // string public name;
+  // string public c_description;
+  // uint public minimum_contribution;
+  // uint public target_amount;
+  // bool public isActive;
+  let obj = {};
+  campaign.methods.creator_email().call().then( (e) => {
+      obj.creator_email = e;
+  });
+
+  campaign.methods.name().call().then( (e) => {
+    obj.name = e;
+  });
+
+  campaign.methods.c_description().call().then( (e) => {
+    obj.c_description = e;
+  });
+
+  campaign.methods.minimum_contribution().call().then( (e) => {
+    obj.minimum_contribution = e;
+  });
+
+  campaign.methods.target_amount().call().then( (e) => {
+    obj.target_amount = e;
+  });
+
+  campaign.methods.isActive().call().then( (e) => {
+    obj.isActive = e;
+  });
+  return obj;
+}
 
 const createCampaign = async (
   email,
@@ -107,7 +150,6 @@ const createCampaign = async (
       });
 
     campaigns = await factory.methods.getDeployedCampaigns().call();
-    console.log(campaigns);
     address = campaigns.at(-1);
 
     campaign = await new web3.eth.Contract(compiledCampaign.abi, address);
@@ -297,7 +339,7 @@ const getFactory = async (email, password) => {
   }
 };
 
-const getAllCampaigns = async () => {
+const get_factory_addresses = async () =>{
   const provider = detectProvider();
   await provider.request({
     method: "eth_requestAccounts",
@@ -324,13 +366,52 @@ const getAllCampaigns = async () => {
   };
   try {
     await user_factory();
-    console.log(campaigns)
     return campaigns;
   } catch {
     return [];
   }
+}
+
+async function* campaign_factory_generator() {
+  const arrays = await get_factory_addresses();
+  let i = 0;
+  const n = arrays.length;
+  while( i < n){
+    yield arrays[i];
+    i++;
+  }
+}
+const get_campaign_addresses = async () => {
+  let all_campaigns = [];
+  for await (let factor_address of campaign_factory_generator()) {
+    
+    let campaigns = await get_campaigns_of(factor_address); 
+    for( let i = 0; i < campaigns.length; i++){
+      all_campaigns.push(campaigns[i]);
+    }
+  }
+  return all_campaigns;
 };
 
+async function* campaign_generator() {
+  const arrays = await get_campaign_addresses();
+  let i = 0;
+  const n = arrays.length;
+  while( i < n){
+    yield arrays[i];
+    i++;
+  }
+}
+
+const getAllCampaigns = async () => {
+  let all_campaigns = [];
+  for await (let campaign_address of campaign_generator()) {
+    let obj = await get_campaign_info(campaign_address);
+    obj.address = campaign_address;
+    all_campaigns.push(obj);
+  }
+  return all_campaigns;
+};
 export {
   injectMetaMask,
   // createCampaignFactory,
