@@ -14,6 +14,19 @@ contract User {
         U_ipfs[username] = ipfs;
     }
 
+    function update_ipfs(
+        string memory username,
+        string memory password,
+        string memory ipfs
+    ) public {
+        bytes32 actual = U_Password[username];
+        bytes32 curr = keccak256(bytes(password));
+        if (actual != curr) {
+            return;
+        }
+        U_ipfs[username] = ipfs;
+    }
+
     function get_ipfs(string memory username, string memory password)
         public
         view
