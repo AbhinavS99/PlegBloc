@@ -64,7 +64,14 @@ const createCampaignFactory = async () => {
   }
 };
 
-const createCampaign = async (min_amount, factoryAddress) => {
+const createCampaign = async (
+  email,
+  name,
+  description,
+  min_amount,
+  target_amount,
+  factoryAddress
+) => {
   const provider = detectProvider();
   await provider.request({
     method: "eth_requestAccounts",
@@ -83,7 +90,7 @@ const createCampaign = async (min_amount, factoryAddress) => {
     factory = await new web3.eth.Contract(compiledFactory.abi, factoryAddress);
 
     await factory.methods
-      .createCampaign(min_amount)
+      .createCampaign(email, name, description, min_amount, target_amount)
       .send({
         from: accounts[0],
         gas: "2000000",
