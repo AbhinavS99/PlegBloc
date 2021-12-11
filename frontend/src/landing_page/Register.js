@@ -38,24 +38,25 @@ const Register = () => {
       return;
     }
 
-    const camp_factory = await createCampaignFactory();
-    if (camp_factory !== "") {
-      const isRegistered = await registerUser(
-        data.email,
-        data.password,
-        data.name,
-        data.phone,
-        camp_factory
+    const isRegistered = await registerUser(
+      data.email,
+      data.password,
+      data.name,
+      data.phone    
       );
-      if (isRegistered == 69) {
-        alert("Account created successfully :)");
-        navigate("/login");
-      } else {
-        alert("Account creation failed :(");
-        setFormDisabled(false);
-        setLoading(false);
-      }
+    if (isRegistered == 69) {
+      alert("Account created successfully :)");
+      navigate("/login");
+    } else {
+      alert("Account creation failed :(");
+      setFormDisabled(false);
+      setLoading(false);
     }
+
+    // const camp_factory = await createCampaignFactory();
+    // if (camp_factory !== "") {
+      
+    // }
 
     setFormDisabled(false);
     setLoading(false);

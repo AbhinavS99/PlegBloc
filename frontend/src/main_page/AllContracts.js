@@ -7,7 +7,9 @@ const AllContracts = () => {
   const [campaigns, setCampaigns] = useState([]);
   useEffect(() => {
     if (isAuthenticated()) {
-      // const campaigns = await getAllCampaigns();
+      getAllCampaigns().then( (factories) =>{
+          
+      });
     }
   }, []);
 
