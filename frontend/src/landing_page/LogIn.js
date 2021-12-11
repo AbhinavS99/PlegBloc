@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { loginUser } from "../eth_scripts/core";
+import { loginUser, getUserIPFSKey } from "../eth_scripts/core";
 import { cookies } from "../auth/Cookie";
 const LogIn = () => {
   const [data, setData] = useState({
@@ -30,7 +30,8 @@ const LogIn = () => {
 
     const flag = await loginUser(data.email, data.password);
     if (flag == 1){
-        alert("Logged in Succesfully :)");
+        const ipfs_key = await getUserIPFSKey(data.email, data.password);
+        alert("Logged in succesfully. IPFS key = "+ipfs_key);
         navigate("/allcontracts");
         window.location.reload(true);
       }

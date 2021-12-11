@@ -182,11 +182,42 @@ const loginUser = async (username, password) => {
 }
 
 
+const getUserIPFSKey = async (username, password) => {
+  const provider = detectProvider();
+  await provider.request({
+    method: "eth_requestAccounts",
+  });
+  const web3 = new Web3(provider);
+
+  let userFactory;
+  let ipfs_key = "";
+  let accounts;
+  const useripfs_key = async () => {
+    accounts = await web3.eth.getAccounts();
+    const userFactoryAddress = addressUser;
+    
+    userFactory = await new web3.eth.Contract(compiledUserFactory.abi, userFactoryAddress);
+      await userFactory.methods.get_ipfs(username, password).call().then( (e) =>{
+          ipfs_key = e;
+      });
+  };
+
+
+  try{
+    await useripfs_key();
+    return ipfs_key;
+  } catch{
+    return "";
+  }
+}
+
+
 export {
   injectMetaMask,
   createCampaignFactory,
   detectProvider,
   createCampaign,
   registerUser,
-  loginUser
+  loginUser,
+  getUserIPFSKey
 };
