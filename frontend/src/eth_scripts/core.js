@@ -2,6 +2,7 @@ import Web3 from "web3";
 import compiledFactory from "../ethereum/build/CampaignFactory.json";
 import compiledUserFactory from "../ethereum/build/User.json";
 import compiledCampaign from "../ethereum/build/Campaign.json";
+import addressUser from '../ethereum/scripts/address_user';
 
 async function injectMetaMask() {
   const provider = detectProvider();
@@ -125,12 +126,10 @@ const registerUser = async (username, password, ipfsID) => {
   let flag = 0;
   const register_user = async () => {
     accounts = await web3.eth.getAccounts();
-    const userFactoryAddress = "0x1915F957039b125E03Ad5099e7F8a1a85155f13e";
+    const userFactoryAddress = addressUser;
     
     userFactory = await new web3.eth.Contract(compiledUserFactory.abi, userFactoryAddress);
 
-    console.log("Accouts =>", accounts[0]);
-    
     await userFactory.methods
       .register(username, password, ipfsID)
       .send({
@@ -152,11 +151,61 @@ const registerUser = async (username, password, ipfsID) => {
 
 }
 
+const loginUser = async (username, password) => {
+  const provider = detectProvider();
+  await provider.request({
+    method: "eth_requestAccounts",
+  });
+  const web3 = new Web3(provider);
+
+  let userFactory;
+  let accounts;
+  let flag = 0;
+  let login_count = 0;
+
+  const login_user = async () => {
+    accounts = await web3.eth.getAccounts();
+    const userFactoryAddress = addressUser;
+    
+    userFactory = await new web3.eth.Contract(compiledUserFactory.abi, userFactoryAddress);
+
+    // await userFactory.methods
+    //   .login(username, password)
+    //   .send({
+    //     from: accounts[0],
+    //     gas: "2000000",
+    //   })
+    //   .catch((error) => {
+    //     console.log(error.message);
+    //     flag = 1;
+    //   });
+
+      alert(username + password);
+      login_count = await userFactory.methods.login(username, password).call();
+      alert("login_count = ", login_count);
+      // campaign = await new web3.eth.Contract(compiledCampaign.abi, address);
+      // if (flag === 1) {
+      //   address = -1;
+      // }
+  };
+
+
+
+  const returnValue = await login_user();
+  // console.log("-0-0", returnValue);
+  // if (flag == 0) {
+  //   return "success";
+  // } else {
+  //   return "failure";
+  // }
+}
+
 
 export {
   injectMetaMask,
   createCampaignFactory,
   detectProvider,
   createCampaign,
-  registerUser
+  registerUser,
+  loginUser
 };

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { loginUser } from "../eth_scripts/core";
 
 const LogIn = () => {
   const [data, setData] = useState({
@@ -27,25 +28,27 @@ const LogIn = () => {
     setLoading(true);
     setFormDisabled(true);
 
-    axios
-      .post("http://localhost:8000/signin", data, { withCredentials: true })
-      .then((response) => {
-        if (response.data.isError) {
-          alert(response.data.message);
-        } else {
-          navigate("/allcontracts");
-          window.location.reload(true);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data: ", error);
-        console.log(error);
-      })
-      .finally(() => {
-        setFormDisabled(false);
-        setLoading(false);
-        console.log("Done");
-      });
+    await loginUser(data.email, data.password);
+
+    // axios
+    //   .post("http://localhost:8000/signin", data, { withCredentials: true })
+    //   .then((response) => {
+    //     if (response.data.isError) {
+    //       alert(response.data.message);
+    //     } else {
+    //       navigate("/allcontracts");
+    //       window.location.reload(true);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error fetching data: ", error);
+    //     console.log(error);
+    //   })
+    //   .finally(() => {
+    //     setFormDisabled(false);
+    //     setLoading(false);
+    //     console.log("Done");
+    //   });
   };
 
   return (
