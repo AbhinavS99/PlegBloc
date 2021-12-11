@@ -1,6 +1,6 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { getCurrentUser, isAuthenticated } from "../auth/helper";
+import { getUserInfo, isAuthenticated } from "../auth/helper";
+import { getAllCampaigns } from "../eth_scripts/core";
 import Common from "./Common";
 
 const PersonalCampaigns = () => {
@@ -8,29 +8,20 @@ const PersonalCampaigns = () => {
 
   useEffect(() => {
     if (isAuthenticated()) {
-      const email = getCurrentUser();
-      const post_data = {
-        email: email,
-      };
-
-      axios
-        .post("http://localhost:8000/myCampaigns", post_data, {
-          withCredentials: true,
-        })
-        .then((response) => {
-          if (response.data.isError) {
-            alert(response.data.message);
-          } else {
-            setCampaigns(response.data.allMyCampaigns);
-            console.log(campaigns);
+      const curr_user = getUserInfo();
+      const curr_email = curr_user.email;
+      getAllCampaigns().then((inp_campaigns) => {
+        console.log(inp_campaigns);
+        console.log(inp_campaigns.length);
+        let final_camps = [];
+        inp_campaigns.forEach((camp) => {
+          if (camp.creator_email === curr_email) {
+            final_camps.push(camp);
           }
-        })
-        .catch((error) => {
-          console.error("Error fetching data: ", error);
-        })
-        .finally(() => {
-          console.log("Done");
         });
+        console.log(final_camps);
+        setCampaigns(final_camps);
+      });
     }
   }, []);
 

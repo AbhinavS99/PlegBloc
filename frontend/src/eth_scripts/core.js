@@ -33,8 +33,6 @@ const detectProvider = () => {
   return provider;
 };
 
-
-
 const get_campaigns_of = async (factory_address) => {
   const provider = detectProvider();
   await provider.request({
@@ -46,7 +44,7 @@ const get_campaigns_of = async (factory_address) => {
   let campaigns;
   const create_factory = async () => {
     factory = await new web3.eth.Contract(compiledFactory.abi, factory_address);
-    campaigns = await factory.methods.getDeployedCampaigns().call();  
+    campaigns = await factory.methods.getDeployedCampaigns().call();
   };
   try {
     await create_factory();
@@ -66,7 +64,10 @@ const get_campaigns_at = async (campaign_address) => {
 
   let campaign;
   const create_factory = async () => {
-    campaign = await new web3.eth.Contract(compiledCampaign.abi, campaign_address);  
+    campaign = await new web3.eth.Contract(
+      compiledCampaign.abi,
+      campaign_address
+    );
   };
   try {
     await create_factory();
@@ -86,31 +87,50 @@ const get_campaign_info = async (campaign_address) => {
   // uint public target_amount;
   // bool public isActive;
   let obj = {};
-  campaign.methods.creator_email().call().then( (e) => {
+  await campaign.methods
+    .creator_email()
+    .call()
+    .then((e) => {
       obj.creator_email = e;
-  });
+    });
 
-  campaign.methods.name().call().then( (e) => {
-    obj.name = e;
-  });
+  await campaign.methods
+    .name()
+    .call()
+    .then((e) => {
+      obj.name = e;
+    });
 
-  campaign.methods.c_description().call().then( (e) => {
-    obj.c_description = e;
-  });
+  await campaign.methods
+    .c_description()
+    .call()
+    .then((e) => {
+      obj.c_description = e;
+    });
 
-  campaign.methods.minimum_contribution().call().then( (e) => {
-    obj.minimum_contribution = e;
-  });
+  await campaign.methods
+    .minimum_contribution()
+    .call()
+    .then((e) => {
+      obj.minimum_contribution = e;
+    });
 
-  campaign.methods.target_amount().call().then( (e) => {
-    obj.target_amount = e;
-  });
+  await campaign.methods
+    .target_amount()
+    .call()
+    .then((e) => {
+      obj.target_amount = e;
+    });
 
-  campaign.methods.isActive().call().then( (e) => {
-    obj.isActive = e;
-  });
+  await campaign.methods
+    .isActive()
+    .call()
+    .then((e) => {
+      obj.isActive = e;
+    });
+
   return obj;
-}
+};
 
 const createCampaign = async (
   email,
@@ -339,7 +359,7 @@ const getFactory = async (email, password) => {
   }
 };
 
-const get_factory_addresses = async () =>{
+const get_factory_addresses = async () => {
   const provider = detectProvider();
   await provider.request({
     method: "eth_requestAccounts",
@@ -370,13 +390,13 @@ const get_factory_addresses = async () =>{
   } catch {
     return [];
   }
-}
+};
 
 async function* campaign_factory_generator() {
   const arrays = await get_factory_addresses();
   let i = 0;
   const n = arrays.length;
-  while( i < n){
+  while (i < n) {
     yield arrays[i];
     i++;
   }
@@ -384,9 +404,8 @@ async function* campaign_factory_generator() {
 const get_campaign_addresses = async () => {
   let all_campaigns = [];
   for await (let factor_address of campaign_factory_generator()) {
-    
-    let campaigns = await get_campaigns_of(factor_address); 
-    for( let i = 0; i < campaigns.length; i++){
+    let campaigns = await get_campaigns_of(factor_address);
+    for (let i = 0; i < campaigns.length; i++) {
       all_campaigns.push(campaigns[i]);
     }
   }
@@ -397,7 +416,7 @@ async function* campaign_generator() {
   const arrays = await get_campaign_addresses();
   let i = 0;
   const n = arrays.length;
-  while( i < n){
+  while (i < n) {
     yield arrays[i];
     i++;
   }

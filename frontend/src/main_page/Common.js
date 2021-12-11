@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "./Card";
-import web from "../../src/images/demo.jpg";
+import web from "../../src/images/hero-img.png";
 
 const Common = (props) => {
   return (
@@ -17,11 +17,11 @@ const Common = (props) => {
                   <Card
                     imgsrc={web}
                     title={val.name}
-                    des={val.description}
-                    campaignAddress={val.campaignAddress}
-                    contractFactoryAddress={val.contractFactoryAddress}
-                    manager={val.manager}
+                    des={val.c_description}
+                    campaignAddress={val.address}
+                    manager={val.creator_email}
                     campaign={val}
+                    key={ind}
                   />
                 );
               })}

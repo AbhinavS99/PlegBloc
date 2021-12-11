@@ -7,78 +7,12 @@ const AllContracts = () => {
   const [campaigns, setCampaigns] = useState([]);
   useEffect(() => {
     if (isAuthenticated()) {
-      getAllCampaigns().then( (factories) =>{
-          console.log(factories);
+      getAllCampaigns().then((inp_campaigns) => {
+        console.log(inp_campaigns);
+        setCampaigns(inp_campaigns);
       });
     }
   }, []);
-
-  // useEffect(() => {
-  //   if (isAuthenticated()) {
-  //     const user_email = getCurrentUser();
-  //     const data = {n
-  //       email: user_email,
-  //     };
-  //     axios
-  //       .post("http://localhost:8000/getUser", data, { withCredentials: true })
-  //       .then((response) => {
-  //         if (response.data.isError) {
-  //           console.log(response.data.message);
-  //         } else {
-  //           const user = response.data.user;
-  //           console.log(user);
-  //           if (
-  //             user.myCampaignFactoryAddress !== null &&
-  //             user.myCampaignFactoryAddress === ""
-  //           ) {
-  //             const campaignFactoryAddress = createCampaignFactory().then(
-  //               (address) => {
-  //                 user.myCampaignFactoryAddress = address;
-  //                 const data = {
-  //                   email: user_email,
-  //                   user: user,
-  //                 };
-  //                 axios
-  //                   .post("http://localhost:8000/updateUser", data, {
-  //                     withCredentials: true,
-  //                   })
-  //                   .then((response) => {
-  //                     console.log(response.data.message);
-  //                   })
-  //                   .catch((error) => {
-  //                     console.error("Error fetching data: ", error);
-  //                   })
-  //                   .finally(() => {
-  //                     console.log("Factory Done");
-  //                   });
-  //               }
-  //             );
-  //           } else {
-  //             axios
-  //               .post(
-  //                 "http://localhost:8000/activeCampaigns",
-  //                 {},
-  //                 { withCredentials: true }
-  //               )
-  //               .then((response) => {
-  //                 if (response.data.isError) {
-  //                   alert(response.data.message);
-  //                 } else {
-  //                   setCampaigns(response.data.allActiveCampaigns);
-  //                   console.log(campaigns);
-  //                 }
-  //               });
-  //           }
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching data: ", error);
-  //       })
-  //       .finally(() => {
-  //         console.log("Done");
-  //       });
-  //   }
-  // }, []);
 
   return (
     <>
