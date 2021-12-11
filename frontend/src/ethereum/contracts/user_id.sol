@@ -10,8 +10,8 @@ contract User {
         string memory username,
         string memory password,
         string memory ipfs
-    ) public payable {
-        U_Password[username] = keccak256(bytes(password));
+    ) public  {
+        U_Password[username] = keccak256( bytes(password) );
         U_ipfs[username] = ipfs;
         U_login_count[username] = 0;
     }
@@ -22,7 +22,7 @@ contract User {
         returns (string memory ipfs)
     {
         bytes32 actual = U_Password[username];
-        bytes32 curr = keccak256(bytes(password));
+        bytes32 curr = keccak256( bytes(password) );
         if (actual == curr) {
             return U_ipfs[username];
         }
@@ -34,7 +34,7 @@ contract User {
         returns (int256 count)
     {
         bytes32 actual = U_Password[username];
-        bytes32 curr = keccak256(bytes(password));
+        bytes32 curr = keccak256( bytes(password) );
         if (actual == curr) {
             U_login_count[username] += 1;
             return U_login_count[username];
