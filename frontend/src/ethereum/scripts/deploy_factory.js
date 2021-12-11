@@ -7,7 +7,7 @@ const Web3 = require("web3");
 const fs = require("fs-extra");
 const path = require("path");
 
-const compiledUserFactory = require("../build/User.json");
+const compiledFactoryStore = require("../build/FactoryStore.json");
 
 const provider = new HDWalletProvider(
   process.env.REACT_APP_MNEMONIC,
@@ -17,16 +17,18 @@ const web3 = new Web3(provider);
 
 const deployedAddressPath = path.resolve(
   __dirname,
-  "../scripts/address_user.js"
+  "../scripts/factory_address.js"
 );
 
 (async () => {
   const accounts = await web3.eth.getAccounts();
   console.log(`Attempting to deploy from account: ${accounts[2]}`);
 
-  const deployedFactory = await new web3.eth.Contract(compiledUserFactory.abi)
+  const deployedFactoryStore = await new web3.eth.Contract(
+    compiledFactoryStore.abi
+  )
     .deploy({
-      data: "0x" + compiledUserFactory.evm.bytecode.object,
+      data: "0x" + compiledFactoryStore.evm.bytecode.object,
     })
     .send({
       from: accounts[2],
@@ -34,16 +36,16 @@ const deployedAddressPath = path.resolve(
     });
 
   console.log(
-    `Campaign Factory deployed at address: ${deployedFactory.options.address}`
+    `Factory Store deployed at address: ${deployedFactoryStore.options.address}`
   );
 
   fs.removeSync(deployedAddressPath);
   fs.writeFileSync(
     deployedAddressPath,
-    `module.exports = "${deployedFactory.options.address}";`
+    `module.exports = "${deployedFactoryStore.options.address}";`
   );
   console.log(
-    "Successfully deployed, contract address now accessible in address.js"
+    "Successfully deployed, contract address now accessible in factory_address.js"
   );
   provider.engine.stop();
 })();

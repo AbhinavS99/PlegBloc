@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Common from "./Common";
-import { injectMetaMask, createCampaignFactory } from "../eth_scripts/core";
-import { isAuthenticated, getCurrentUser } from "../auth/helper";
-
-import axios from "axios";
+import { getAllCampaigns } from "../eth_scripts/core";
+import { isAuthenticated } from "../auth/helper";
 
 const AllContracts = () => {
   const [campaigns, setCampaigns] = useState([]);
-
   useEffect(() => {
-    injectMetaMask();
+    if (isAuthenticated()) {
+      // const campaigns = await getAllCampaigns();
+    }
   }, []);
 
   // useEffect(() => {
@@ -79,7 +78,6 @@ const AllContracts = () => {
   //   }
   // }, []);
 
-  useEffect(() => {}, []);
   return (
     <>
       <Common title="Active Campaigns" data={campaigns} />

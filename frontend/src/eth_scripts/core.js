@@ -292,6 +292,8 @@ const getFactory = async (email, password) => {
   }
 };
 
+const getAllCampaigns = async () => {};
+
 export {
   injectMetaMask,
   createCampaignFactory,
@@ -302,4 +304,5 @@ export {
   getName,
   getMobile,
   getFactory,
+  getAllCampaigns,
 };

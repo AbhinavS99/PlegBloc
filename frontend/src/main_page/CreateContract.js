@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { getUserInfo, isAuthenticated } from "../auth/helper";
 import { createCampaign } from "../eth_scripts/core";
 
