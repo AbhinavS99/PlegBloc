@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser, isAuthenticated } from "../auth/helper";
+import { deleteCookie, getCurrentUser, isAuthenticated } from "../auth/helper";
 import axios from "axios";
 
 const Profile = () => {
@@ -60,30 +60,12 @@ const Profile = () => {
     if (btn === "logout") {
       setLogoutLoading(true);
       if (isAuthenticated()) {
-        const post_data = {
-          email: data.email,
-        };
-
-        axios
-          .post("http://localhost:8000/logout", post_data, {
-            withCredentials: true,
-          })
-          .then((response) => {
-            if (response.data.isError) {
-              console.log("Some error occured");
-            } else {
-              alert("Logged Out Successfully");
-              navigate("/login");
-              window.location.reload(true);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          })
-          .finally(() => {
-            setFormDisabled(false);
-            setLogoutLoading(false);
-          });
+        deleteCookie();
+        alert("Logged Out Successfully");
+        navigate("/login");
+        window.location.reload(true);
+        setFormDisabled(false);
+        setLogoutLoading(false);
       }
     } else if (btn === "update") {
       setUpdateLoading(true);
