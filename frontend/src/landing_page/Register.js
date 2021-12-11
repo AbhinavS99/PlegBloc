@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { registerUser } from "../eth_scripts/core";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -26,42 +27,49 @@ const Register = () => {
     });
   };
 
-  const formSubmit = (e) => {
+  const formSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setFormDisabled(true);
+
     if (data.password !== data.confirm_password) {
       alert("Password and Confirm Password must be same!");
       setFormDisabled(false);
       setLoading(false);
-    } else {
-      const _data = {
-        name: data.name,
-        username: data.username,
-        email: data.email,
-        phone: data.phone,
-        password: data.password,
-      };
-
-      axios
-        .post("http://localhost:8000/signup", _data, { withCredentials: true })
-        .then((response) => {
-          if (response.data.isError) {
-            alert(response.data.message);
-          } else {
-            alert("Account Created Successfully. Redirecting to Login.");
-            navigate("/login");
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching data: ", error);
-        })
-        .finally(() => {
-          setFormDisabled(false);
-          setLoading(false);
-          console.log("Done");
-        });
+      return;
     }
+
+    
+    const ipfsID = "shaney";
+    await registerUser(data.username, data.password, ipfsID);
+
+
+      // const _data = {
+      //   name: data.name,
+      //   username: data.username,
+      //   email: data.email,
+      //   phone: data.phone,
+      //   password: data.password,
+      // };
+
+      // axios
+      //   .post("http://localhost:8000/signup", _data, { withCredentials: true })
+      //   .then((response) => {
+      //     if (response.data.isError) {
+      //       alert(response.data.message);
+      //     } else {
+      //       alert("Account Created Successfully. Redirecting to Login.");
+      //       navigate("/login");
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     console.error("Error fetching data: ", error);
+      //   })
+      //   .finally(() => {
+      //     setFormDisabled(false);
+      //     setLoading(false);
+      //     console.log("Done");
+      //   });
   };
 
   return (
