@@ -114,7 +114,7 @@ const createCampaign = async (min_amount, factoryAddress) => {
 
 
 
-const registerUser = async (username, password, ipfsID) => {
+const registerUser = async (email, password, name, mobile) => {
   const provider = detectProvider();
   await provider.request({
     method: "eth_requestAccounts",
@@ -131,7 +131,7 @@ const registerUser = async (username, password, ipfsID) => {
     userFactory = await new web3.eth.Contract(compiledUserFactory.abi, userFactoryAddress);
 
     await userFactory.methods
-      .register(username, password, ipfsID)
+      .register(email, password, name, mobile)
       .send({
         from: accounts[0],
         gas: "2000000",
@@ -151,7 +151,7 @@ const registerUser = async (username, password, ipfsID) => {
 
 }
 
-const loginUser = async (username, password) => {
+const loginUser = async (email, password) => {
   const provider = detectProvider();
   await provider.request({
     method: "eth_requestAccounts",
@@ -166,7 +166,7 @@ const loginUser = async (username, password) => {
     const userFactoryAddress = addressUser;
     
     userFactory = await new web3.eth.Contract(compiledUserFactory.abi, userFactoryAddress);
-      await userFactory.methods.login(username, password).call().then( (e) =>{
+      await userFactory.methods.login(email, password).call().then( (e) =>{
           login_flag = e;
       });
   };
@@ -182,7 +182,7 @@ const loginUser = async (username, password) => {
 }
 
 
-const getUserIPFSKey = async (username, password) => {
+const getName = async (email, password) => {
   const provider = detectProvider();
   await provider.request({
     method: "eth_requestAccounts",
@@ -190,22 +190,47 @@ const getUserIPFSKey = async (username, password) => {
   const web3 = new Web3(provider);
 
   let userFactory;
-  let ipfs_key = "";
+  let name = "";
   let accounts;
-  const useripfs_key = async () => {
+  const user_name = async () => {
     accounts = await web3.eth.getAccounts();
     const userFactoryAddress = addressUser;
     
     userFactory = await new web3.eth.Contract(compiledUserFactory.abi, userFactoryAddress);
-      await userFactory.methods.get_ipfs(username, password).call().then( (e) =>{
-          ipfs_key = e;
+      await userFactory.methods.get_name(email, password).call().then( (e) =>{
+          name = e;
       });
   };
-
-
   try{
-    await useripfs_key();
-    return ipfs_key;
+    await user_name();
+    return name;
+  } catch{
+    return "";
+  }
+}
+
+const getMobile = async (email, password) => {
+  const provider = detectProvider();
+  await provider.request({
+    method: "eth_requestAccounts",
+  });
+  const web3 = new Web3(provider);
+
+  let userFactory;
+  let mobile = "";
+  let accounts;
+  const user_mobile = async () => {
+    accounts = await web3.eth.getAccounts();
+    const userFactoryAddress = addressUser;
+    
+    userFactory = await new web3.eth.Contract(compiledUserFactory.abi, userFactoryAddress);
+      await userFactory.methods.get_mobile(email, password).call().then( (e) =>{  
+        mobile = e;
+      });
+  };
+  try{
+    await user_mobile();
+    return mobile;
   } catch{
     return "";
   }
@@ -219,5 +244,6 @@ export {
   createCampaign,
   registerUser,
   loginUser,
-  getUserIPFSKey
+  getName,
+  getMobile
 };

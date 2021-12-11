@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { loginUser, getUserIPFSKey } from "../eth_scripts/core";
+import { loginUser, getName, getMobile } from "../eth_scripts/core";
 import { cookies } from "../auth/Cookie";
 import {isAuthenticated, getCurrentUser, setCookie} from './../auth/helper';
 
@@ -31,10 +31,15 @@ const LogIn = () => {
     setFormDisabled(true);
 
     const flag = await loginUser(data.email, data.password);
-    if (flag == 1) {
-        const ipfs_key = await getUserIPFSKey(data.email, data.password);
-        alert("Logged in succesfully. IPFS key = " + ipfs_key);
-        
+    if (flag == 69) {
+        const name = await getName(data.email, data.password);
+        const mobile = await getMobile(data.email, data.password);
+        const obj = {
+          'name':name,
+          'mobile':mobile,
+          'email':data.email
+        };
+        alert( " Name = " + name + " , Mobile = " + mobile + ", Email = " + data.email);
         // get document from IPFS.
         // if (data.email === IPFS.user.email)
         

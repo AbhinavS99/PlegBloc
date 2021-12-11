@@ -43,7 +43,7 @@ const Register = () => {
     // call ipfs with data as user object
     
     const ipfsID = "shaney";
-    const isRegistered = await registerUser(data.email, data.password, ipfsID);
+    const isRegistered = await registerUser(data.email, data.password, data.name, data.phone);
     if (isRegistered === "success") {
       alert("Account created successfully :)");
       navigate("/login");

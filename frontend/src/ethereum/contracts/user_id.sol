@@ -3,53 +3,56 @@ pragma solidity ^0.8.9;
 
 contract User {
     mapping(string => bytes32) private U_Password;
-    mapping(string => string) private U_ipfs;
+    mapping(string => string) private U_mobile;
+    mapping(string => string) private U_name;
 
     function register(
-        string memory username,
+        string memory email,
         string memory password,
-        string memory ipfs
+        string memory name,
+        string memory mobile
     ) public {
-        U_Password[username] = keccak256(bytes(password));
-        U_ipfs[username] = ipfs;
+        U_Password[email] = keccak256(bytes(password));
+        U_name[email] = name;
+        U_mobile[email] = mobile;
     }
 
-    function update_ipfs(
-        string memory username,
-        string memory password,
-        string memory ipfs
-    ) public {
-        bytes32 actual = U_Password[username];
+    function is_valid( string memory email, string memory password) internal view returns (bool){
+        bytes32 actual = U_Password[email];
         bytes32 curr = keccak256(bytes(password));
-        if (actual != curr) {
-            return;
-        }
-        U_ipfs[username] = ipfs;
+        return actual == curr;
     }
 
-    function get_ipfs(string memory username, string memory password)
-        public
-        view
-        returns (string memory ipfs)
-    {
-        bytes32 actual = U_Password[username];
-        bytes32 curr = keccak256(bytes(password));
-        if (actual == curr) {
-            return U_ipfs[username];
-        }
-        return "";
-    }
-
-    function login(string memory username, string memory password)
+    function login(string memory email, string memory password)
         public
         view
         returns (int256 count)
     {
-        bytes32 actual = U_Password[username];
-        bytes32 curr = keccak256(bytes(password));
-        if (actual == curr) {
-            return 1;
+        if (  is_valid(email, password) ) {
+            return 69;
         }
-        return -10;
+        return -69;
+    }
+
+    function get_name(string memory email, string memory password)
+        public
+        view
+        returns (string memory name)
+    {
+        if(is_valid(email, password)){
+            return U_name[email];
+        }
+        return "";
+    }
+
+    function get_mobile(string memory email, string memory password)
+        public
+        view
+        returns (string memory mobile)
+    {
+        if(is_valid(email, password)){
+            return U_mobile[email];
+        }
+        return "";
     }
 }
