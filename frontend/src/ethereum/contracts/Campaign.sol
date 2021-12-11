@@ -32,13 +32,13 @@ contract CampaignFactory{
  * @title Campaign
  * @dev Campaign smart contract
  */
-contract Campaign{
+contract Campaign {
     
     /**
      * @title Request
      * @dev The Request Struct has all the parameters that define a request created by campaign manager/creator
      */
-    struct Request{
+    struct Request {
         string description;
         uint value;
         address recepient;
@@ -55,7 +55,7 @@ contract Campaign{
     
     /* @dev modifier to check if the caller is the campaign creator/manager
     */
-    modifier restrict_to_creator(){
+    modifier restrict_to_creator() {
         require(msg.sender == creator);
         _;
     }

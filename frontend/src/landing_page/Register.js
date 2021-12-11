@@ -38,6 +38,9 @@ const Register = () => {
       setLoading(false);
       return;
     }
+
+
+    // call ipfs with data as user object
     
     const ipfsID = "shaney";
     const isRegistered = await registerUser(data.email, data.password, ipfsID);

@@ -33,7 +33,11 @@ const LogIn = () => {
     const flag = await loginUser(data.email, data.password);
     if (flag == 1) {
         const ipfs_key = await getUserIPFSKey(data.email, data.password);
-        alert("Logged in succesfully. IPFS key = "+ipfs_key);
+        alert("Logged in succesfully. IPFS key = " + ipfs_key);
+        
+        // get document from IPFS.
+        // if (data.email === IPFS.user.email)
+        
         setCookie(data.email);
         navigate("/allcontracts");
         window.location.reload(true);
