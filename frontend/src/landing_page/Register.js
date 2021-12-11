@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { registerUser } from "../eth_scripts/core";
+import { createCampaignFactory } from "../eth_scripts/core";
 
 const Register = () => {
   const navigate = useNavigate();
   const [data, setData] = useState({
     name: "",
-    username: "",
     phone: "",
     email: "",
     password: "",
@@ -39,19 +38,27 @@ const Register = () => {
       return;
     }
 
-
-    // call ipfs with data as user object
-    
-    const ipfsID = "shaney";
-    const isRegistered = await registerUser(data.email, data.password, data.name, data.phone);
-    if (isRegistered === "success") {
-      alert("Account created successfully :)");
-      navigate("/login");
-    } else {
-      alert("Account creation failed :(");
-      setFormDisabled(false);
-      setLoading(false);
+    const camp_factory = await createCampaignFactory();
+    if (camp_factory !== "") {
+      const isRegistered = await registerUser(
+        data.email,
+        data.password,
+        data.name,
+        data.phone,
+        camp_factory
+      );
+      if (isRegistered == 69) {
+        alert("Account created successfully :)");
+        navigate("/login");
+      } else {
+        alert("Account creation failed :(");
+        setFormDisabled(false);
+        setLoading(false);
+      }
     }
+
+    setFormDisabled(false);
+    setLoading(false);
   };
 
   return (
@@ -75,21 +82,6 @@ const Register = () => {
                   value={data.name}
                   onChange={InputEvent}
                   placeholder="Enter your name"
-                  disabled={isFormDisabled}
-                />
-              </div>
-              <div className="mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
-                  Username
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="exampleFormControlInput1"
-                  name="username"
-                  value={data.username}
-                  onChange={InputEvent}
-                  placeholder="Username"
                   disabled={isFormDisabled}
                 />
               </div>

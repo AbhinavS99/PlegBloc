@@ -2,7 +2,7 @@ import Web3 from "web3";
 import compiledFactory from "../ethereum/build/CampaignFactory.json";
 import compiledUserFactory from "../ethereum/build/User.json";
 import compiledCampaign from "../ethereum/build/Campaign.json";
-import addressUser from '../ethereum/scripts/address_user';
+import addressUser from "../ethereum/scripts/address_user";
 
 async function injectMetaMask() {
   const provider = detectProvider();
@@ -112,9 +112,7 @@ const createCampaign = async (min_amount, factoryAddress) => {
   }
 };
 
-
-
-const registerUser = async (email, password, name, mobile) => {
+const registerUser = async (email, password, name, mobile, camp_factory) => {
   const provider = detectProvider();
   await provider.request({
     method: "eth_requestAccounts",
@@ -127,11 +125,14 @@ const registerUser = async (email, password, name, mobile) => {
   const register_user = async () => {
     accounts = await web3.eth.getAccounts();
     const userFactoryAddress = addressUser;
-    
-    userFactory = await new web3.eth.Contract(compiledUserFactory.abi, userFactoryAddress);
+
+    userFactory = await new web3.eth.Contract(
+      compiledUserFactory.abi,
+      userFactoryAddress
+    );
 
     await userFactory.methods
-      .register(email, password, name, mobile)
+      .register(email, password, name, mobile, camp_factory)
       .send({
         from: accounts[0],
         gas: "2000000",
@@ -144,12 +145,11 @@ const registerUser = async (email, password, name, mobile) => {
 
   await register_user();
   if (flag == 0) {
-    return "success";
+    return 69;
   } else {
-    return "failure";
+    return -69;
   }
-
-}
+};
 
 const loginUser = async (email, password) => {
   const provider = detectProvider();
@@ -164,23 +164,27 @@ const loginUser = async (email, password) => {
   const login_user = async () => {
     accounts = await web3.eth.getAccounts();
     const userFactoryAddress = addressUser;
-    
-    userFactory = await new web3.eth.Contract(compiledUserFactory.abi, userFactoryAddress);
-      await userFactory.methods.login(email, password).call().then( (e) =>{
-          login_flag = e;
+
+    userFactory = await new web3.eth.Contract(
+      compiledUserFactory.abi,
+      userFactoryAddress
+    );
+    await userFactory.methods
+      .login(email, password)
+      .call()
+      .then((e) => {
+        login_flag = e;
       });
   };
 
-
-  try{
+  try {
     await login_user();
     console.log("Login Flag = ", login_flag);
     return login_flag;
-  } catch{
+  } catch {
     return -1;
   }
-}
-
+};
 
 const getName = async (email, password) => {
   const provider = detectProvider();
@@ -195,19 +199,25 @@ const getName = async (email, password) => {
   const user_name = async () => {
     accounts = await web3.eth.getAccounts();
     const userFactoryAddress = addressUser;
-    
-    userFactory = await new web3.eth.Contract(compiledUserFactory.abi, userFactoryAddress);
-      await userFactory.methods.get_name(email, password).call().then( (e) =>{
-          name = e;
+
+    userFactory = await new web3.eth.Contract(
+      compiledUserFactory.abi,
+      userFactoryAddress
+    );
+    await userFactory.methods
+      .get_name(email, password)
+      .call()
+      .then((e) => {
+        name = e;
       });
   };
-  try{
+  try {
     await user_name();
     return name;
-  } catch{
+  } catch {
     return "";
   }
-}
+};
 
 const getMobile = async (email, password) => {
   const provider = detectProvider();
@@ -222,20 +232,58 @@ const getMobile = async (email, password) => {
   const user_mobile = async () => {
     accounts = await web3.eth.getAccounts();
     const userFactoryAddress = addressUser;
-    
-    userFactory = await new web3.eth.Contract(compiledUserFactory.abi, userFactoryAddress);
-      await userFactory.methods.get_mobile(email, password).call().then( (e) =>{  
+
+    userFactory = await new web3.eth.Contract(
+      compiledUserFactory.abi,
+      userFactoryAddress
+    );
+    await userFactory.methods
+      .get_mobile(email, password)
+      .call()
+      .then((e) => {
         mobile = e;
       });
   };
-  try{
+  try {
     await user_mobile();
     return mobile;
-  } catch{
+  } catch {
     return "";
   }
-}
+};
 
+const getFactory = async (email, password) => {
+  const provider = detectProvider();
+  await provider.request({
+    method: "eth_requestAccounts",
+  });
+  const web3 = new Web3(provider);
+
+  let userFactory;
+  let camp_factory = "";
+  let accounts;
+  const user_factory = async () => {
+    accounts = await web3.eth.getAccounts();
+    const userFactoryAddress = addressUser;
+
+    userFactory = await new web3.eth.Contract(
+      compiledUserFactory.abi,
+      userFactoryAddress
+    );
+    await userFactory.methods
+      .get_factory(email, password)
+      .call()
+      .then((e) => {
+        camp_factory = e;
+      });
+  };
+  try {
+    await user_factory();
+    return camp_factory;
+  } catch {
+    return "";
+  }
+};
 
 export {
   injectMetaMask,
@@ -245,5 +293,6 @@ export {
   registerUser,
   loginUser,
   getName,
-  getMobile
+  getMobile,
+  getFactory,
 };

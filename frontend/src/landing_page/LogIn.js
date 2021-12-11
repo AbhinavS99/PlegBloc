@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { loginUser, getName, getMobile } from "../eth_scripts/core";
-import { cookies } from "../auth/Cookie";
-import {isAuthenticated, getCurrentUser, setCookie} from './../auth/helper';
+import { loginUser, getName, getMobile, getFactory } from "../eth_scripts/core";
+import { setCookie } from "./../auth/helper";
 
 const LogIn = () => {
   const [data, setData] = useState({
@@ -32,21 +30,20 @@ const LogIn = () => {
 
     const flag = await loginUser(data.email, data.password);
     if (flag == 69) {
-        const name = await getName(data.email, data.password);
-        const mobile = await getMobile(data.email, data.password);
-        const obj = {
-          'name':name,
-          'mobile':mobile,
-          'email':data.email
-        };
-        alert( " Name = " + name + " , Mobile = " + mobile + ", Email = " + data.email);
-        // get document from IPFS.
-        // if (data.email === IPFS.user.email)
-        
-        setCookie(data.email);
-        navigate("/allcontracts");
-        window.location.reload(true);
-      }
+      const name = await getName(data.email, data.password);
+      const phone = await getMobile(data.email, data.password);
+      const factory = await getFactory(data.email, data.password);
+      const obj = {
+        name: name,
+        phone: phone,
+        email: data.email,
+        factory: factory,
+      };
+      alert(factory);
+      setCookie(obj);
+      navigate("/allcontracts");
+      window.location.reload(true);
+    }
     setFormDisabled(false);
     setLoading(false);
   };

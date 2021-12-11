@@ -5,16 +5,19 @@ contract User {
     mapping(string => bytes32) private U_Password;
     mapping(string => string) private U_mobile;
     mapping(string => string) private U_name;
+    mapping(string => string) private U_factory;
 
     function register(
         string memory email,
         string memory password,
         string memory name,
-        string memory mobile
+        string memory mobile,
+        string memory factory
     ) public {
         U_Password[email] = keccak256(bytes(password));
         U_name[email] = name;
         U_mobile[email] = mobile;
+        U_factory[email] = factory;
     }
 
     function is_valid( string memory email, string memory password) internal view returns (bool){
@@ -55,4 +58,16 @@ contract User {
         }
         return "";
     }
+
+    function get_factory(string memory email, string memory password)
+        public
+        view
+        returns (string memory factory)
+    {
+        if(is_valid(email, password)){
+            return U_factory[email];
+        }
+        return "";
+    }
+    
 }
