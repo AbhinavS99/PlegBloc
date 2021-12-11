@@ -120,55 +120,38 @@ const registerUser = async (username, password, ipfsID) => {
   });
   const web3 = new Web3(provider);
 
-  // let factory;
-  // let campaigns;
-  // let campaign;
-  // let accounts;
-  // let address;
-  // let flag = 0;
-
   let userFactory;
   let accounts;
-
+  let flag = 0;
   const register_user = async () => {
     accounts = await web3.eth.getAccounts();
-    // factory = await new web3.eth.Contract(compiledFactory.abi, factoryAddress);
-    const userFactoryAddress = "0x898747501739EF0B5a65b5606D9acEF8a85cb271";
+    const userFactoryAddress = "0x1915F957039b125E03Ad5099e7F8a1a85155f13e";
+    
     userFactory = await new web3.eth.Contract(compiledUserFactory.abi, userFactoryAddress);
 
     console.log("Accouts =>", accounts[0]);
-
+    
     await userFactory.methods
       .register(username, password, ipfsID)
       .send({
         from: accounts[0],
-        gas: "20000000000",
+        gas: "2000000",
       })
       .catch((error) => {
         console.log(error.message);
-        alert(error.message);
-        return;
+        flag = 1;
       });
-
-    // campaigns = await factory.methods.getDeployedCampaigns().call();
-    // console.log(campaigns);
-    // address = campaigns.at(-1);
-
-    // campaign = await new web3.eth.Contract(compiledCampaign.abi, address);
-    // if (flag === 1) {
-    //   address = -1;
-    // }
   };
 
-  try {
-    await register_user();
+  await register_user();
+  if (flag == 0) {
     return "success";
-  } catch {
+  } else {
     return "failure";
   }
 
-
 }
+
 
 export {
   injectMetaMask,
