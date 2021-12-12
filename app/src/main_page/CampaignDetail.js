@@ -81,6 +81,18 @@ const CampaignDetail = () => {
     });
   };
 
+  const onCreateRequestClick = (e) => {
+    e.preventDefault();
+    navigate("/createRequest", {
+      state: {
+        manager: manager,
+        campaignAddress: campaignAddress,
+        campaign: campaign,
+        role: role,
+      },
+    });
+  };
+
   return (
     <>
       <div className="my-5">
@@ -115,7 +127,7 @@ const CampaignDetail = () => {
             <p class="mb-2 text-muted text-uppercase small">
               {campaign.manager}
             </p>
-            <p class="pt-1">{campaign.description}</p>
+            <p class="pt-1">{campaign.c_description}</p>
             <div class="table-responsive">
               <table class="table table-sm table-borderless mb-0">
                 <tbody>
@@ -203,13 +215,9 @@ const CampaignDetail = () => {
                 <button
                   className="btn btn-outline-primary ms-3"
                   type="submit"
+                  onClick={onCreateRequestClick}
                   id="create_req_btn"
                 >
-                  <span
-                    class="spinner-grow spinner-grow-sm"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>
                   Create Request
                 </button>
               )}

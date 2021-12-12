@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 
 function RequestsPage() {
   const { state } = useLocation();
   const { manager, campaignAddress, campaign, role } = state;
+
   return (
     <div>
       <h1>{manager}</h1>

@@ -25,6 +25,7 @@ import PublicRoute from "./auth/PublicRoute";
 import PrivateRoute from "./auth/PrivateRoute";
 import CampaignDetail from "./main_page/CampaignDetail";
 import RequestsPage from "./main_page/RequestsPage";
+import CreateRequest from "./main_page/CreateRequest";
 
 const App = () => {
   return (
@@ -138,6 +139,15 @@ const App = () => {
           element={
             <PrivateRoute>
               <RequestsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          end
+          path="/createRequest"
+          element={
+            <PrivateRoute>
+              <CreateRequest />
             </PrivateRoute>
           }
         />

@@ -494,6 +494,49 @@ const isUserContributor = async (campaignAddress) => {
   return ans;
 };
 
+const createRequest = async (
+  campaignAddress,
+  description,
+  amount,
+  recipient
+) => {
+  const provider = detectProvider();
+  await provider.request({
+    method: "eth_requestAccounts",
+  });
+  const web3 = new Web3(provider);
+
+  let flag = 1;
+  let accounts;
+  let campaign;
+  const create_request = async () => {
+    accounts = await web3.eth.getAccounts();
+    campaign = await new web3.eth.Contract(
+      compiledCampaign.abi,
+      campaignAddress
+    );
+
+    await campaign.methods
+      .new_request(description, amount.toString(), recipient)
+      .send({
+        from: accounts[0],
+        gas: "2000000",
+      })
+      .then(() => {
+        flag = 1;
+        console.log("created request");
+      })
+      .catch((error) => {
+        alert("Error");
+        console.log(error);
+        flag = 0;
+      });
+  };
+
+  await create_request();
+  return flag;
+};
+
 export {
   injectMetaMask,
   // createCampaignFactory,
@@ -507,4 +550,5 @@ export {
   getAllCampaigns,
   isUserContributor,
   contributeToCampaign,
+  createRequest,
 };
