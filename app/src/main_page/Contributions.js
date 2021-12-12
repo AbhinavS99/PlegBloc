@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { getCurrentUser, isAuthenticated } from "../auth/helper";
 import Common from "./Common";

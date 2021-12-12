@@ -537,6 +537,31 @@ const createRequest = async (
   return flag;
 };
 
+const fetchAllRequests = async (campaignAddress) => {
+  const provider = detectProvider();
+  await provider.request({
+    method: "eth_requestAccounts",
+  });
+  const web3 = new Web3(provider);
+
+  let requests = [];
+  let accounts;
+  let campaign;
+
+  const fetch_all_requests = async () => {
+    accounts = await web3.eth.getAccounts();
+    campaign = await new web3.eth.Contract(
+      compiledCampaign.abi,
+      campaignAddress
+    );
+
+    const requests = await campaign.methods.requests(0).call();
+  };
+
+  await fetch_all_requests();
+  return requests;
+};
+
 export {
   injectMetaMask,
   // createCampaignFactory,
@@ -551,4 +576,5 @@ export {
   isUserContributor,
   contributeToCampaign,
   createRequest,
+  fetchAllRequests,
 };
