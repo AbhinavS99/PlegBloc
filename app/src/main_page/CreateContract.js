@@ -74,7 +74,7 @@ const CreateContract = () => {
           <div className="col-md-6 col-10 mx-auto">
             <form onSubmit={formSubmit}>
               <div className="mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
+                <label htmlFor="exampleFormControlInput1" className="form-label">
                   Name
                 </label>
                 <input
@@ -90,7 +90,7 @@ const CreateContract = () => {
                 />
               </div>
               <div className="mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
+                <label htmlFor="exampleFormControlInput1" className="form-label">
                   Description
                 </label>
                 <textarea
@@ -107,7 +107,7 @@ const CreateContract = () => {
               </div>
 
               <div className="mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
+                <label htmlFor="exampleFormControlInput1" className="form-label">
                   Minimum Amount for Contribution
                 </label>
                 <input
@@ -123,7 +123,7 @@ const CreateContract = () => {
                 />
               </div>
               <div className="mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
+                <label htmlFor="exampleFormControlInput1" className="form-label">
                   Target Amount
                 </label>
                 <input
@@ -145,7 +145,7 @@ const CreateContract = () => {
                   disabled={isFormDisabled}
                 >
                   <span
-                    class="spinner-grow spinner-grow-sm"
+                    className="spinner-grow spinner-grow-sm"
                     role="status"
                     style={isLoading ? {} : { display: "none" }}
                     aria-hidden="true"

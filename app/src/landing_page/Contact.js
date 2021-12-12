@@ -35,7 +35,7 @@ const Contact = () => {
           <div className="col-md-6 col-10 mx-auto">
             <form onSubmit={formSubmit}>
               <div className="mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
+                <label htmlFor="exampleFormControlInput1" className="form-label">
                   Full Name
                 </label>
                 <input
@@ -49,7 +49,7 @@ const Contact = () => {
                 />
               </div>
               <div className="mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
+                <label htmlFor="exampleFormControlInput1" className="form-label">
                   Phone
                 </label>
                 <input
@@ -63,7 +63,7 @@ const Contact = () => {
                 />
               </div>
               <div className="mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
+                <label htmlFor="exampleFormControlInput1" className="form-label">
                   Email address
                 </label>
                 <input
@@ -80,7 +80,7 @@ const Contact = () => {
                 </div>
               </div>
               <div className="mb-3">
-                <label for="exampleFormControlTextarea1" className="form-label">
+                <label htmlFor="exampleFormControlTextarea1" className="form-label">
                   Message
                 </label>
                 <textarea

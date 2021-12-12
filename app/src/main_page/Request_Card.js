@@ -46,7 +46,7 @@ function Request_Card(props) {
   };
   return (
     <div
-      class="card mb-3 ms-5 border-primary"
+      className="card mb-3 ms-5 border-primary"
       style={{ maxWidth: 540 + "px", margin: 0 + "px", padding: 0 + "px" }}
       disabled={props.complete === "complete"}
     >
@@ -58,27 +58,27 @@ function Request_Card(props) {
       {props.complete === "incomplete" && (
         <div className="card-header alert-success">Request #{props.ind}</div>
       )}
-      <div class="row g-0">
-        <div class="col-md-4">
-          <img src={web} class="img-fluid rounded-star mb-1" alt="..." />
+      <div className="row g-0">
+        <div className="col-md-4">
+          <img src={web} className="img-fluid rounded-star mb-1" alt="..." />
         </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <strong class="card-text">{props.request.description}</strong>
-            <p class="card-text">
-              <small class="text-muted">
+        <div className="col-md-8">
+          <div className="card-body">
+            <strong className="card-text">{props.request.description}</strong>
+            <p className="card-text">
+              <small className="text-muted">
                 No. of Backers : {props.approvers}
               </small>
               <br />
-              <small class="text-muted">
+              <small className="text-muted">
                 No. of Votes : {props.request.yes_count}
               </small>
               <br />
-              <small class="text-muted">
+              <small className="text-muted">
                 Amount Requested: {props.request.value} Wei
               </small>
               <br />
-              <small class="text-muted">
+              <small className="text-muted">
                 Recepient Address: {props.request.recepient} Wei
               </small>
             </p>
@@ -89,7 +89,7 @@ function Request_Card(props) {
                 onClick={finalizeClick}
               >
                 <span
-                  class="spinner-grow spinner-grow-sm"
+                  className="spinner-grow spinner-grow-sm"
                   role="status"
                   style={isLoading ? {} : { display: "none" }}
                   aria-hidden="true"
@@ -113,7 +113,7 @@ function Request_Card(props) {
                 onClick={approveVoteClick}
               >
                 <span
-                  class="spinner-grow spinner-grow-sm"
+                  className="spinner-grow spinner-grow-sm"
                   role="status"
                   style={isLoading ? {} : { display: "none" }}
                   aria-hidden="true"

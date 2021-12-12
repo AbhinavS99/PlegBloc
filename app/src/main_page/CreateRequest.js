@@ -58,7 +58,7 @@ function CreateRequest() {
           <div className="col-md-6 col-10 mx-auto">
             <form onSubmit={formSubmit}>
               <div className="mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
+                <label htmlFor="exampleFormControlInput1" className="form-label">
                   Recipient Address
                 </label>
                 <input
@@ -74,7 +74,7 @@ function CreateRequest() {
                 />
               </div>
               <div className="mb-3">
-                <label for="exampleFormControlInput1" className="form-label">
+                <label htmlFor="exampleFormControlInput1" className="form-label">
                   Amount Requested
                 </label>
                 <input
@@ -91,7 +91,7 @@ function CreateRequest() {
               </div>
 
               <div className="mb-3">
-                <label for="exampleFormControlTextarea1" className="form-label">
+                <label htmlFor="exampleFormControlTextarea1" className="form-label">
                   Description
                 </label>
                 <textarea
@@ -114,7 +114,7 @@ function CreateRequest() {
                   disabled={isFormDisabled}
                 >
                   <span
-                    class="spinner-grow spinner-grow-sm"
+                    className="spinner-grow spinner-grow-sm"
                     role="status"
                     style={isLoading ? {} : { display: "none" }}
                     aria-hidden="true"

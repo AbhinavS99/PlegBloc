@@ -23,13 +23,13 @@ const Contributions = () => {
   return (
     <div>
       <Common title="My Contributions" data={campaigns} />
-      <div class="text-center">
+      <div className="text-center">
         <div
-          class="spinner-border"
+          className="spinner-border"
           role="status"
           style={{ width: 5 + "rem", height: 5 + "rem", visibility: visib }}
         >
-          <span class="visually-hidden">Loading...</span>
+          <span className="visually-hidden">Loading...</span>
         </div>
       </div>
     </div>
