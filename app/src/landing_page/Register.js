@@ -71,7 +71,7 @@ const Register = () => {
           <div className="col-md-6 col-10 mx-auto">
             <form onSubmit={formSubmit}>
               <div className="mb-3">
-                <label htmlFor="exampleFormControlInput1" className="form-label">
+                <label for="exampleFormControlInput1" className="form-label">
                   Name
                 </label>
                 <input
@@ -86,7 +86,7 @@ const Register = () => {
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="exampleFormControlInput1" className="form-label">
+                <label for="exampleFormControlInput1" className="form-label">
                   Phone
                 </label>
                 <input
@@ -101,7 +101,7 @@ const Register = () => {
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="exampleFormControlInput1" className="form-label">
+                <label for="exampleFormControlInput1" className="form-label">
                   Email address
                 </label>
                 <input
@@ -119,7 +119,7 @@ const Register = () => {
                 </div>
               </div>
               <div className="mb-3">
-                <label htmlFor="exampleInputPassword1" className="form-label">
+                <label for="exampleInputPassword1" className="form-label">
                   Password
                 </label>
                 <input
@@ -134,7 +134,7 @@ const Register = () => {
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="exampleInputPassword1" className="form-label">
+                <label for="exampleInputPassword1" className="form-label">
                   Confirm Password
                 </label>
                 <input
@@ -155,7 +155,7 @@ const Register = () => {
                   disabled={isFormDisabled}
                 >
                   <span
-                    className="spinner-grow spinner-grow-sm"
+                    class="spinner-grow spinner-grow-sm"
                     role="status"
                     style={isLoading ? {} : { display: "none" }}
                     aria-hidden="true"

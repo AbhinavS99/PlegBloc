@@ -57,7 +57,7 @@ const Profile = () => {
           <div className="col-md-6 col-10 mx-auto">
             <form onSubmit={formSubmit}>
               <div className="mb-3">
-                <label htmlFor="exampleFormControlInput1" className="form-label">
+                <label for="exampleFormControlInput1" className="form-label">
                   Name
                 </label>
                 <input
@@ -72,7 +72,7 @@ const Profile = () => {
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="exampleFormControlInput1" className="form-label">
+                <label for="exampleFormControlInput1" className="form-label">
                   Phone
                 </label>
                 <input
@@ -87,7 +87,7 @@ const Profile = () => {
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="exampleFormControlInput1" className="form-label">
+                <label for="exampleFormControlInput1" className="form-label">
                   Email address
                 </label>
                 <input
@@ -105,7 +105,7 @@ const Profile = () => {
                 </div>
               </div>
               <div className="mb-3">
-                <label htmlFor="exampleFormControlInput1" className="form-label">
+                <label for="exampleFormControlInput1" className="form-label">
                   Campaign Factory
                 </label>
                 <input
@@ -130,7 +130,7 @@ const Profile = () => {
                   disabled={isFormDisabled}
                 >
                   <span
-                    className="spinner-grow spinner-grow-sm"
+                    class="spinner-grow spinner-grow-sm"
                     role="status"
                     style={isLogoutLoading ? {} : { display: "none" }}
                     aria-hidden="true"
