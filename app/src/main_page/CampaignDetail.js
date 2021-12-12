@@ -113,7 +113,7 @@ const CampaignDetail = () => {
                     >
                       <img
                         src={web}
-                        class="img-fluid z-depth-1"
+                        className="img-fluid z-depth-1 animated"
                         style={{ height: 30 + "rem" }}
                       />
                     </a>
@@ -195,22 +195,6 @@ const CampaignDetail = () => {
                 </button>
               )}
 
-              {role === "manager" && (
-                <button
-                  className="btn btn-outline-primary ms-3"
-                  type="submit"
-                  id="active_btn"
-                >
-                  <span
-                    class="spinner-grow spinner-grow-sm"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>
-                  {campaign.isActive
-                    ? "Deactivate Campaign"
-                    : "Reactivate Campaign"}
-                </button>
-              )}
               {role === "manager" && (
                 <button
                   className="btn btn-outline-primary ms-3"
