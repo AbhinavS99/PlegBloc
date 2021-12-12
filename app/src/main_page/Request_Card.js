@@ -35,7 +35,7 @@ function Request_Card(props) {
         if (finalize_flag == 0) {
           alert("Some error occured.");
         } else {
-          alert("Request Approved Successfully. :)");
+          alert("Request Finalized Successfully. :)");
           window.location.reload(true);
         }
       } else {
@@ -51,10 +51,7 @@ function Request_Card(props) {
       disabled={props.complete === "complete"}
     >
       {props.complete === "complete" && (
-        <div
-          className="card-header alert-danger"
-          style={{ margin: 0 + "px", padding: 0 + "px" }}
-        >
+        <div className="card-header alert-danger">
           Request #{props.ind} {" (Complete)"}
         </div>
       )}
@@ -80,11 +77,15 @@ function Request_Card(props) {
               <small class="text-muted">
                 Amount Requested: {props.request.value} Wei
               </small>
+              <br />
+              <small class="text-muted">
+                Recepient Address: {props.request.recepient} Wei
+              </small>
             </p>
             {props.role === "manager" && (
               <button
                 className="btn btn-primary text-center"
-                disabled={isLoading}
+                disabled={isLoading || props.complete === "complete"}
                 onClick={finalizeClick}
               >
                 <span
@@ -93,18 +94,22 @@ function Request_Card(props) {
                   style={isLoading ? {} : { display: "none" }}
                   aria-hidden="true"
                 ></span>
-                {isLoading ? (
-                  <span>Finalizing Request...</span>
-                ) : (
-                  <span>Finalize Request</span>
+                {props.complete === "incomplete" &&
+                  (isLoading ? (
+                    <span>Finalizing Request...</span>
+                  ) : (
+                    <span>Finalize Request</span>
+                  ))}
+
+                {props.complete === "complete" && (
+                  <span>Request Finalized</span>
                 )}
               </button>
             )}
-
             {props.role === "contributor" && (
               <button
                 className="btn btn-primary text-center"
-                disabled={isLoading}
+                disabled={isLoading || props.complete === "complete"}
                 onClick={approveVoteClick}
               >
                 <span
@@ -113,10 +118,15 @@ function Request_Card(props) {
                   style={isLoading ? {} : { display: "none" }}
                   aria-hidden="true"
                 ></span>
-                {isLoading ? (
-                  <span>Approving Request...</span>
-                ) : (
-                  <span>Approve Request</span>
+                {props.complete === "incomplete" &&
+                  (isLoading ? (
+                    <span>Approving Request...</span>
+                  ) : (
+                    <span>Approve Request</span>
+                  ))}
+
+                {props.complete === "complete" && (
+                  <span>Request Finalized</span>
                 )}
               </button>
             )}
