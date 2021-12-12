@@ -210,8 +210,8 @@ contract Campaign{
         require(msg.value >= minimum_contribution);
         if (abi.encodePacked(backers[msg.sender]).length < 1){
             backers_count++;
+            backers[msg.sender] = true;
         }
-        backers[msg.sender] = true;
     }
 
     function getRequestNumber() public view returns(uint256){
