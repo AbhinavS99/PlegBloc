@@ -208,9 +208,9 @@ contract Campaign{
      */
     function contribute() public payable {
         require(msg.value >= minimum_contribution);
-        if (abi.encodePacked(backers[msg.sender]).length < 1){
-            backers_count++;
+        if (backers[msg.sender] != true){
             backers[msg.sender] = true;
+            backers_count++;
         }
     }
 
