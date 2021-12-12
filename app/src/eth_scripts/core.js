@@ -678,6 +678,41 @@ const finalizeRequest = async (campaignAddress, ind) => {
   return finalize_flag;
 };
 
+async function* accounts_generator(){
+  const provider = detectProvider();
+  await provider.request({
+    method: "eth_requestAccounts",
+  });
+  const web3 = new Web3(provider);
+  const accounts = await web3.eth.getAccounts();
+  for( let i = 0; i < accounts.length; i++){
+    yield accounts[i];
+  } 
+}
+const getMyContributedCampaigns = async () => {
+  let all_campaigns = [];
+  for await (let campaign_address of campaign_generator()) {
+    let campaign = await get_campaigns_at(campaign_address);
+    let contributed = false;
+    let contributed_address = [];
+    for await( let account of accounts_generator()){
+      await campaign.methods.backers( account ).call().then((e) => {
+          if (e == true){
+            contributed = true;
+            contributed_address.push(account);
+          }
+      });
+    }
+    if (contributed == true){
+       let obj = await get_campaign_info(campaign_address);
+
+      // obj.contributed_using = contributed_address;
+      // constributed address contains all addresses used to contribute to this campaign 
+      all_campaigns.push(obj);
+    } 
+  }
+  return all_campaigns;
+};
 export {
   injectMetaMask,
   detectProvider,
@@ -694,4 +729,5 @@ export {
   fetchAllRequests,
   approveRequest,
   finalizeRequest,
+  getMyContributedCampaigns
 };

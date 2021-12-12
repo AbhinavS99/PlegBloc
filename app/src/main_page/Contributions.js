@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getCurrentUser, isAuthenticated } from "../auth/helper";
 import Common from "./Common";
+import { getMyContributedCampaigns } from "../eth_scripts/core";
 
 const Contributions = () => {
   const [campaigns, setCampaigns] = useState([]);
@@ -11,6 +12,11 @@ const Contributions = () => {
       // need campaigns where current user is a backer (check from backers map in contract)
       // final list -> final_campaigns
       // setCampaigns(final_campaigns);
+      getMyContributedCampaigns().then( (campaigns) =>{
+        setVisib("hidden");
+        setCampaigns(campaigns);
+        console.log(campaigns);
+      });
     }
   }, []);
 
