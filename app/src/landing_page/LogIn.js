@@ -29,7 +29,7 @@ const LogIn = () => {
     setFormDisabled(true);
 
     const flag = await loginUser(data.email, data.password);
-    if (flag === 69) {
+    if (flag == 69) {
       const name = await getName(data.email, data.password);
       const phone = await getMobile(data.email, data.password);
       const factory = await getFactory(data.email, data.password);

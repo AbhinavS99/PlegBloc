@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { isAuthenticated } from "../auth/helper";
+import { getCurrentUser, isAuthenticated } from "../auth/helper";
 import Common from "./Common";
 import { getMyContributedCampaigns } from "../eth_scripts/core";
 
