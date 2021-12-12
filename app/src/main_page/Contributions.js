@@ -6,7 +6,13 @@ const Contributions = () => {
   const [campaigns, setCampaigns] = useState([]);
   const [visib, setVisib] = useState("visible");
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (isAuthenticated()) {
+      // need campaigns where current user is a backer (check from backers map in contract)
+      // final list -> final_campaigns
+      // setCampaigns(final_campaigns);
+    }
+  }, []);
 
   return (
     <div>
