@@ -624,7 +624,7 @@ const approveRequest = async (campaignAddress, ind) => {
     );
 
     await campaign.methods
-      .approve_request(0)
+      .approve_request(ind)
       .send({
         from: accounts[0],
         gas: "2000000",
@@ -645,9 +645,41 @@ const approveRequest = async (campaignAddress, ind) => {
   return obj;
 };
 
+const finalizeRequest = async (campaignAddress, ind) => {
+  const provider = detectProvider();
+  await provider.request({
+    method: "eth_requestAccounts",
+  });
+  const web3 = new Web3(provider);
+
+  let accounts;
+  let campaign;
+  let finalize_flag = 1;
+
+  const finalize_request = async () => {
+    accounts = await web3.eth.getAccounts();
+    campaign = await new web3.eth.Contract(
+      compiledCampaign.abi,
+      campaignAddress
+    );
+
+    await campaign.methods
+      .make_transaction(ind)
+      .send({
+        from: accounts[0],
+        gas: "2000000",
+      })
+      .catch((error) => {
+        finalize_flag = 0;
+      });
+  };
+
+  await finalize_request();
+  return finalize_flag;
+};
+
 export {
   injectMetaMask,
-  // createCampaignFactory,
   detectProvider,
   createCampaign,
   registerUser,
@@ -661,4 +693,5 @@ export {
   createRequest,
   fetchAllRequests,
   approveRequest,
+  finalizeRequest,
 };

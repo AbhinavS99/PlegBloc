@@ -175,7 +175,7 @@ const CampaignDetail = () => {
                   </tr>
                   <tr>
                     <th class="pl-0 w-25" scope="row">
-                      <strong>No. of Approvers</strong>
+                      <strong>No. of Backers</strong>
                     </th>
                     <td>{campInfo.approvers}</td>
                   </tr>
