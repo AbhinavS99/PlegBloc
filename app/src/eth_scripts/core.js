@@ -630,6 +630,7 @@ const approveRequest = async (campaignAddress, ind) => {
         gas: "2000000",
       })
       .catch((error) => {
+        console.log(error);
         error_msg = error;
         approval_flag = 0;
       });

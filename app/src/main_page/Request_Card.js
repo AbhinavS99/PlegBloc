@@ -10,15 +10,17 @@ function Request_Card(props) {
     e.preventDefault();
     setLoading(true);
     if (isAuthenticated()) {
-      const { request_approval_flag, error_msg } = await approveRequest(
+      
+      const obj = await approveRequest(
         props.campaignAddress,
         props.ind
       );
-
-      if (request_approval_flag == 0) {
-        alert(error_msg);
+      
+      if (obj.approval_flag == 0) {
+        alert("Request Already Approved");
       } else {
         alert("Request Approved Successfully. :)");
+        window.location.reload(true);
       }
     }
 
