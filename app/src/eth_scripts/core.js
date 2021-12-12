@@ -1,10 +1,7 @@
 import Web3 from "web3";
 import compiledFactory from "../ethereum/build/CampaignFactory.json";
-import compiledUserFactory from "../ethereum/build/User.json";
 import compiledCampaign from "../ethereum/build/Campaign.json";
-import compiledMain from "../ethereum/build/Main.json";
-import addressUser from "../ethereum/scripts/address_user";
-import addressMain from "../ethereum/scripts/main_address";
+import compiledMain from "../ethereum/build/Main.json"; 
 import main_address from "../ethereum/scripts/main_address";
 
 async function injectMetaMask() {
@@ -147,8 +144,6 @@ const createCampaign = async (
   const web3 = new Web3(provider);
 
   let factory;
-  let campaigns;
-  let campaign;
   let accounts;
   let address;
   let flag = 0;
@@ -169,10 +164,8 @@ const createCampaign = async (
         flag = 1;
       });
 
-    campaigns = await factory.methods.getDeployedCampaigns().call();
+    let campaigns = await factory.methods.getDeployedCampaigns().call();
     address = campaigns.at(-1);
-
-    campaign = await new web3.eth.Contract(compiledCampaign.abi, address);
     if (flag === 1) {
       address = -1;
     }
@@ -218,7 +211,7 @@ const registerUser = async (email, password, name, mobile) => {
   };
 
   await register_user();
-  if (flag == 0) {
+  if (flag === 0) {
     return 69;
   } else {
     return -69;
@@ -234,9 +227,8 @@ const loginUser = async (email, password) => {
 
   let userFactory;
   let login_flag = 0;
-  let accounts;
+  
   const login_user = async () => {
-    accounts = await web3.eth.getAccounts();
     const userFactoryAddress = main_address;
 
     userFactory = await new web3.eth.Contract(
@@ -269,9 +261,9 @@ const getName = async (email, password) => {
 
   let userFactory;
   let name = "";
-  let accounts;
+
   const user_name = async () => {
-    accounts = await web3.eth.getAccounts();
+
     const userFactoryAddress = main_address;
 
     userFactory = await new web3.eth.Contract(
@@ -302,9 +294,8 @@ const getMobile = async (email, password) => {
 
   let userFactory;
   let mobile = "";
-  let accounts;
   const user_mobile = async () => {
-    accounts = await web3.eth.getAccounts();
+    
     const userFactoryAddress = main_address;
 
     userFactory = await new web3.eth.Contract(
@@ -335,9 +326,8 @@ const getFactory = async (email, password) => {
 
   let userFactory;
   let camp_factory = "";
-  let accounts;
   const user_factory = async () => {
-    accounts = await web3.eth.getAccounts();
+   
     const userFactoryAddress = main_address;
 
     userFactory = await new web3.eth.Contract(
@@ -368,9 +358,9 @@ const get_factory_addresses = async () => {
 
   let userFactory;
   let campaigns = [];
-  let accounts;
+
   const user_factory = async () => {
-    accounts = await web3.eth.getAccounts();
+
     const userFactoryAddress = main_address;
 
     userFactory = await new web3.eth.Contract(
@@ -577,11 +567,10 @@ const fetchAllRequests = async (campaignAddress) => {
   let requests = [];
   let requests_len = 0;
   let approvers = 0;
-  let accounts;
   let campaign;
 
   const fetch_all_requests = async () => {
-    accounts = await web3.eth.getAccounts();
+    
     campaign = await new web3.eth.Contract(
       compiledCampaign.abi,
       campaignAddress
@@ -697,13 +686,13 @@ const getMyContributedCampaigns = async () => {
     let contributed_address = [];
     for await( let account of accounts_generator()){
       await campaign.methods.backers( account ).call().then((e) => {
-          if (e == true){
+          if (e === true){
             contributed = true;
             contributed_address.push(account);
           }
       });
     }
-    if (contributed == true){
+    if (contributed === true){
        let obj = await get_campaign_info(campaign_address);
 
       // obj.contributed_using = contributed_address;

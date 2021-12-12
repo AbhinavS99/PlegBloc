@@ -16,7 +16,7 @@ function setCookie(obj) {
 function isAuthenticated() {
   const token = Cookies.get("token");
   try {
-    const payload = jwt.verify(token, process.env.REACT_APP_JWT_SECRET);
+    jwt.verify(token, process.env.REACT_APP_JWT_SECRET);
     return true;
   } catch {
     return false;

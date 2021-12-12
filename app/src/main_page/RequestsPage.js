@@ -15,7 +15,7 @@ function RequestsPage() {
   useEffect(() => {
     if (isAuthenticated()) {
       fetchAllRequests(campaignAddress).then(({ requests, approvers }) => {
-        if (requests.length != 0) {
+        if (requests.length !== 0) {
           console.log(requests);
           setApprovers(approvers);
           setVisib("hidden");

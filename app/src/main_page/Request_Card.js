@@ -12,7 +12,7 @@ function Request_Card(props) {
     if (isAuthenticated()) {
       const obj = await approveRequest(props.campaignAddress, props.ind);
 
-      if (obj.approval_flag == 0) {
+      if (obj.approval_flag === 0) {
         alert("Request Already Approved");
       } else {
         alert("Request Approved Successfully. :)");
@@ -32,7 +32,7 @@ function Request_Card(props) {
           props.campaignAddress,
           props.ind
         );
-        if (finalize_flag == 0) {
+        if (finalize_flag === 0) {
           alert("Some error occured.");
         } else {
           alert("Request Finalized Successfully. :)");

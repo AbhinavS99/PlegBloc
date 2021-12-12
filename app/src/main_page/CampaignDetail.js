@@ -71,7 +71,7 @@ const CampaignDetail = () => {
           data.amount,
           campaignAddress
         );
-        if (msg_flag == 0) {
+        if (msg_flag === 0) {
           alert("Could not make the contribution. :/");
           setData({ amount: 0 });
         } else {
@@ -116,15 +116,15 @@ const CampaignDetail = () => {
       <div className="my-5">
         <h1 className="text-center">Campaign Details</h1>
       </div>
-      <section class="mb-5">
-        <div class="row">
-          <div class="col-md-6 mb-4 mb-md-0">
+      <section className="mb-5">
+        <div className="row">
+          <div className="col-md-6 mb-4 mb-md-0">
             <div id="mdb-lightbox-ui"></div>
 
-            <div class="mdb-lightbox">
-              <div class="row product-gallery mx-1">
-                <div class="col-12 mb-0">
-                  <figure class="view overlay rounded z-depth-1">
+            <div className="mdb-lightbox">
+              <div className="row product-gallery mx-1">
+                <div className="col-12 mb-0">
+                  <figure className="view overlay rounded z-depth-1">
                     <a
                       href="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/14a.jpg"
                       data-size="710x823"
@@ -140,47 +140,47 @@ const CampaignDetail = () => {
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div className="col-md-6">
             <h5>{campaign.name}</h5>
-            <p class="mb-2 text-muted text-uppercase small">
+            <p className="mb-2 text-muted text-uppercase small">
               {campaign.manager}
             </p>
-            <p class="pt-1">{campaign.c_description}</p>
-            <div class="table-responsive">
-              <table class="table table-sm table-borderless mb-0">
+            <p className="pt-1">{campaign.c_description}</p>
+            <div className="table-responsive">
+              <table className="table table-sm table-borderless mb-0">
                 <tbody>
                   <tr>
-                    <th class="pl-0 w-25" scope="row">
+                    <th className="pl-0 w-25" scope="row">
                       <strong>Role</strong>
                     </th>
                     <td>{role.toLocaleUpperCase()}</td>
                   </tr>
                   <tr>
-                    <th class="pl-0 w-25" scope="row">
+                    <th className="pl-0 w-25" scope="row">
                       <strong>Minimum Contribution</strong>
                     </th>
                     <td>{campaign.minimum_contribution} Wei</td>
                   </tr>
                   <tr>
-                    <th class="pl-0 w-25" scope="row">
+                    <th className="pl-0 w-25" scope="row">
                       <strong>Current Contribution</strong>
                     </th>
                     <td>{campInfo.current_contribution} Wei</td>
                   </tr>
                   <tr>
-                    <th class="pl-0 w-25" scope="row">
+                    <th className="pl-0 w-25" scope="row">
                       <strong>Target Amount</strong>
                     </th>
                     <td>{campaign.target_amount} Wei</td>
                   </tr>
                   <tr>
-                    <th class="pl-0 w-25" scope="row">
+                    <th className="pl-0 w-25" scope="row">
                       <strong>No. of Backers</strong>
                     </th>
                     <td>{campInfo.approvers}</td>
                   </tr>
                   <tr>
-                    <th class="pl-0 w-25" scope="row">
+                    <th className="pl-0 w-25" scope="row">
                       <strong>No. of Requests</strong>
                     </th>
                     <td>{campInfo.requests}</td>
@@ -211,7 +211,7 @@ const CampaignDetail = () => {
                     onClick={onMakeContributionClick}
                   >
                     <span
-                      class="spinner-grow spinner-grow-sm"
+                      className="spinner-grow spinner-grow-sm"
                       role="status"
                       style={isContriLoading ? {} : { display: "none" }}
                       aria-hidden="true"

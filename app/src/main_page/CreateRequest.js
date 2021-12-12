@@ -37,7 +37,7 @@ function CreateRequest() {
         data.amount,
         data.recipient
       );
-      if (flag == 1) {
+      if (flag === 1) {
         alert("Request Created Successfully. :)");
         setData(def_obj);
       } else {

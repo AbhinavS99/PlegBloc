@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import Card from "./Card";
 import web from "../../src/images/hero-img.png";
 

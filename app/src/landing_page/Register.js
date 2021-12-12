@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../eth_scripts/core";
-import { createCampaignFactory } from "../eth_scripts/core";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -44,7 +43,7 @@ const Register = () => {
       data.name,
       data.phone    
       );
-    if (isRegistered == 69) {
+    if (isRegistered === 69) {
       alert("Account created successfully :)");
       navigate("/login");
     } else {

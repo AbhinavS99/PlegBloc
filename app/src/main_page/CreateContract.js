@@ -53,7 +53,7 @@ const CreateContract = () => {
         data.target_amount,
         user.factory
       );
-      if (campaign_address == -1) {
+      if (campaign_address === -1) {
         alert("Campaign Creation Failed. :/");
       } else {
         alert("Campaign Created Successfully. :)");
