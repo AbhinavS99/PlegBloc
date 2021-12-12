@@ -11,6 +11,11 @@ const CampaignDetail = () => {
   const [isContriLoading, setContriLoading] = useState(false);
   const [data, setData] = useState({ amount: 0 });
   const [role, setRole] = useState("dummy");
+  const [campInfo, setCampInfo] = useState({
+    current_contribution: "",
+    approvers: "",
+    requests: "",
+  });
 
   useEffect(() => {
     if (isAuthenticated()) {
@@ -21,16 +26,29 @@ const CampaignDetail = () => {
         setRole("manager");
       }
 
-      isUserContributor(campaignAddress).then((isContributor) => {
-        if (isContributor) {
-          setRole("contributor");
-          flag = 0;
-        }
+      isUserContributor(campaignAddress).then(
+        ({ isContributor, approvers, requests, balance, isError }) => {
+          if (isError) {
+            alert("Unexpected error occured");
+          } else {
+            if (isContributor) {
+              setRole("contributor");
+              flag = 0;
+            }
 
-        if (flag === 1) {
-          setRole("visitor");
+            if (flag === 1) {
+              setRole("visitor");
+            }
+
+            const obj = {
+              current_contribution: balance,
+              approvers: approvers.toString(),
+              requests: requests.toString(),
+            };
+            setCampInfo(obj);
+          }
         }
-      });
+      );
     }
   }, []);
 
@@ -133,15 +151,39 @@ const CampaignDetail = () => {
                 <tbody>
                   <tr>
                     <th class="pl-0 w-25" scope="row">
+                      <strong>Role</strong>
+                    </th>
+                    <td>{role.toLocaleUpperCase()}</td>
+                  </tr>
+                  <tr>
+                    <th class="pl-0 w-25" scope="row">
                       <strong>Minimum Contribution</strong>
                     </th>
                     <td>{campaign.minimum_contribution} Wei</td>
                   </tr>
                   <tr>
                     <th class="pl-0 w-25" scope="row">
+                      <strong>Current Contribution</strong>
+                    </th>
+                    <td>{campInfo.current_contribution} Wei</td>
+                  </tr>
+                  <tr>
+                    <th class="pl-0 w-25" scope="row">
                       <strong>Target Amount</strong>
                     </th>
                     <td>{campaign.target_amount} Wei</td>
+                  </tr>
+                  <tr>
+                    <th class="pl-0 w-25" scope="row">
+                      <strong>No. of Approvers</strong>
+                    </th>
+                    <td>{campInfo.approvers}</td>
+                  </tr>
+                  <tr>
+                    <th class="pl-0 w-25" scope="row">
+                      <strong>No. of Requests</strong>
+                    </th>
+                    <td>{campInfo.requests}</td>
                   </tr>
                 </tbody>
               </table>

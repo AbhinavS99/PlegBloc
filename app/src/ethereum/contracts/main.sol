@@ -176,7 +176,7 @@ contract Campaign{
     uint public target_amount;
     bool public isActive;
     mapping(address => bool) public backers;
-    uint backers_count; 
+    uint public backers_count; 
     Request[] public requests;
     
     /* @dev modifier to check if the caller is the campaign creator/manager
@@ -211,6 +211,10 @@ contract Campaign{
         backers[msg.sender] = true;
         backers_count++;
         
+    }
+
+    function getRequestNumber() public view returns(uint256){
+        return requests.length;
     }
     
     /**

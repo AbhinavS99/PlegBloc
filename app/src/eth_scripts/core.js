@@ -478,6 +478,9 @@ const isUserContributor = async (campaignAddress) => {
   let ans = false;
   let accounts;
   let campaign;
+  let approvers = 0;
+  let requests = 0;
+  let balance = 0;
 
   const is_user_contrib = async () => {
     accounts = await web3.eth.getAccounts();
@@ -487,11 +490,29 @@ const isUserContributor = async (campaignAddress) => {
     );
 
     const isContributor = await campaign.methods.backers(accounts[0]).call();
-    console.log(isContributor);
+    approvers = await campaign.methods.backers_count().call();
+    requests = await campaign.methods.getRequestNumber().call();
+    balance = await web3.eth.getBalance(campaign.options.address);
     ans = isContributor;
   };
-  await is_user_contrib();
-  return ans;
+  try {
+    await is_user_contrib();
+    return {
+      isContributor: ans,
+      approvers: approvers,
+      balance: balance,
+      requests: requests,
+      error: false,
+    };
+  } catch {
+    return {
+      isContributor: ans,
+      approvers: approvers,
+      balance: balance,
+      requests: requests,
+      error: true,
+    };
+  }
 };
 
 const createRequest = async (
@@ -537,6 +558,15 @@ const createRequest = async (
   return flag;
 };
 
+async function* request_index_generator(size) {
+  let i = 0;
+  const n = size;
+  while (i < n) {
+    yield i;
+    i++;
+  }
+}
+
 const fetchAllRequests = async (campaignAddress) => {
   const provider = detectProvider();
   await provider.request({
@@ -545,6 +575,8 @@ const fetchAllRequests = async (campaignAddress) => {
   const web3 = new Web3(provider);
 
   let requests = [];
+  let requests_len = 0;
+  let approvers = 0;
   let accounts;
   let campaign;
 
@@ -555,11 +587,61 @@ const fetchAllRequests = async (campaignAddress) => {
       campaignAddress
     );
 
-    const requests = await campaign.methods.requests(0).call();
+    approvers = await campaign.methods.backers_count().call();
+    requests_len = await campaign.methods.getRequestNumber().call();
+
+    for await (let ind of request_index_generator(requests_len)) {
+      let request = await campaign.methods.requests(ind).call();
+      requests.push(request);
+    }
   };
 
-  await fetch_all_requests();
-  return requests;
+  try {
+    await fetch_all_requests();
+    return { requests: requests, approvers: approvers };
+  } catch {
+    return { requests: [], approvers: 0 };
+  }
+};
+
+const approveRequest = async (campaignAddress, ind) => {
+  const provider = detectProvider();
+  await provider.request({
+    method: "eth_requestAccounts",
+  });
+  const web3 = new Web3(provider);
+
+  let accounts;
+  let campaign;
+  let approval_flag = 1;
+  let error_msg = "";
+
+  const approve_request = async () => {
+    accounts = await web3.eth.getAccounts();
+    campaign = await new web3.eth.Contract(
+      compiledCampaign.abi,
+      campaignAddress
+    );
+
+    await campaign.methods
+      .approve_request(0)
+      .send({
+        from: accounts[0],
+        gas: "2000000",
+      })
+      .catch((error) => {
+        error_msg = error;
+        approval_flag = 0;
+      });
+  };
+
+  await approve_request();
+  let obj = {
+    approval_flag: approval_flag,
+    error_msg: error_msg,
+  };
+
+  return obj;
 };
 
 export {
@@ -577,4 +659,5 @@ export {
   contributeToCampaign,
   createRequest,
   fetchAllRequests,
+  approveRequest,
 };
