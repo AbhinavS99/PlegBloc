@@ -232,6 +232,7 @@ const CampaignDetail = () => {
                   type="submit"
                   id="view_request"
                   onClick={onViewRequestClick}
+                  disabled={campInfo.requests == 0 ? true : false}
                 >
                   View Requests
                 </button>
