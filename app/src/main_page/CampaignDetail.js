@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import web from "../images/hero-img.png";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getUserInfo, isAuthenticated } from "../auth/helper";
-import { contributeToCampaign } from "../eth_scripts/core";
+import { contributeToCampaign, isUserContributor } from "../eth_scripts/core";
 
 const CampaignDetail = () => {
+  const navigate = useNavigate();
   const { state } = useLocation();
   const { manager, campaignAddress, campaign } = state;
   const [isContriLoading, setContriLoading] = useState(false);
@@ -20,16 +21,16 @@ const CampaignDetail = () => {
         setRole("manager");
       }
 
-      // campaign.contributedUsers.forEach((user) => {
-      //   if (user.email === email) {
-      //     setRole("contributor");
-      //     flag = 0;
-      //   }
-      // });
+      isUserContributor(campaignAddress).then((isContributor) => {
+        if (isContributor) {
+          setRole("contributor");
+          flag = 0;
+        }
 
-      if (flag === 1) {
-        setRole("visitor");
-      }
+        if (flag === 1) {
+          setRole("visitor");
+        }
+      });
     }
   }, []);
 
@@ -57,6 +58,7 @@ const CampaignDetail = () => {
           setData({ amount: 0 });
         } else {
           alert("You have made a succesful contribution to the campaign. :)");
+          window.location.reload(true);
         }
       } else {
         alert(
@@ -64,8 +66,19 @@ const CampaignDetail = () => {
         );
       }
     }
-
     setContriLoading(false);
+  };
+
+  const onViewRequestClick = (e) => {
+    e.preventDefault();
+    navigate("/viewRequests", {
+      state: {
+        manager: manager,
+        campaignAddress: campaignAddress,
+        campaign: campaign,
+        role: role,
+      },
+    });
   };
 
   return (
@@ -164,12 +177,8 @@ const CampaignDetail = () => {
                   className="btn btn-outline-primary"
                   type="submit"
                   id="view_request"
+                  onClick={onViewRequestClick}
                 >
-                  <span
-                    class="spinner-grow spinner-grow-sm"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>
                   View Requests
                 </button>
               )}

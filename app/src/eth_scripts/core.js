@@ -468,6 +468,32 @@ const contributeToCampaign = async (amount, campaign_address) => {
   return flag;
 };
 
+const isUserContributor = async (campaignAddress) => {
+  const provider = detectProvider();
+  await provider.request({
+    method: "eth_requestAccounts",
+  });
+  const web3 = new Web3(provider);
+
+  let ans = false;
+  let accounts;
+  let campaign;
+
+  const is_user_contrib = async () => {
+    accounts = await web3.eth.getAccounts();
+    campaign = await new web3.eth.Contract(
+      compiledCampaign.abi,
+      campaignAddress
+    );
+
+    const isContributor = await campaign.methods.backers(accounts[0]).call();
+    console.log(isContributor);
+    ans = isContributor;
+  };
+  await is_user_contrib();
+  return ans;
+};
+
 export {
   injectMetaMask,
   // createCampaignFactory,
@@ -479,5 +505,6 @@ export {
   getMobile,
   getFactory,
   getAllCampaigns,
+  isUserContributor,
   contributeToCampaign,
 };
