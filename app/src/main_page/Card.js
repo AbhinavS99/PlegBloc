@@ -18,7 +18,11 @@ const Card = (props) => {
     <>
       <div
         className="col-md-4 col-12 mx-auto"
-        style={{ width: 15 + "rem", height: 15 + "rem" }}
+        style={{
+          width: 15 + "rem",
+          height: 15 + "rem",
+          marginBottom: 6 + "rem",
+        }}
       >
         <div className="card">
           <img
