@@ -66,12 +66,6 @@ const CampaignDetail = () => {
     e.preventDefault();
     setContriLoading(true);
     if (isAuthenticated()) {
-      alert(campaign.minimum_contribution);
-      alert(data.amount);
-      alert(campaignAddress);
-      if (data.amount > campaign.minimum_contribution) {
-        alert("data " + data.amount);
-      }
       if (data.amount >= campaign.minimum_contribution) {
         const msg_flag = await contributeToCampaign(
           data.amount,
