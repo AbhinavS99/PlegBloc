@@ -1,6 +1,11 @@
 # PlegBloc
 ![](https://img.shields.io/gitter/room/AbhinavS99/PlegBloc) ![](https://img.shields.io/github/stars/AbhinavS99/PlegBloc?style=social)
 
+## How To Build
+1. Go to `app/`
+2. Download all modules by typing `npm i`
+3. Enter `npm start`
+4. You should be able to access the website on `localhost:3000`
 ---
 
 ## Outline
